@@ -3,6 +3,7 @@ Slate Star Comments
 
 Some of the best discussion on the net (if you like a very particular kind of discussion) happens in the comments of Scott Alexander's blog, [Slate Star Codex](http://slatestarcodex.com/). Unfortunately the thread system doesn't make it easy to see when new comments have been posted. This is a bit of code to fix that: comments posted since your last visit (or a time you specify) are outlined, and (if using the UserScript or extension) a small floating window lists them.
 
+See [screenshots here](http://imgur.com/a/ThOgM).
 
 Installation
 ------------
@@ -11,7 +12,7 @@ Tested only on recent versions of Firefox and Chrome.
 
 Firefox users: Install Greasemonkey and open SSComments/ssc.user.js in Firefox.
 
-Chrome users: Save SSComments/ssc.user.js to disk, go to `chrome://extensions`, and drag the script onto the main body of the window.
+Chrome users: [Install the extension](https://chrome.google.com/webstore/detail/slatestarcomments/aobpboihcjnlhbnjckjaeafncnpaageh)! Or do it the hard way: save SSComments/ssc.user.js to disk, go to `chrome://extensions`, and drag the script onto the main body of the window.
 
 
 Bookmarklet
