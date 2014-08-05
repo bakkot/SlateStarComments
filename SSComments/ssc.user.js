@@ -2,7 +2,7 @@
 // @name           SlateStarComments
 // @namespace      http://www.github.com/bakkot
 // @description    Highlight new comments on Slate Star Codex posts
-// @include        http://slatestarcodex.com/20*
+// @match          http://slatestarcodex.com/20*
 // ==/UserScript==
 
 
