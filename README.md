@@ -21,9 +21,9 @@ Bookmarklet
 
 The installation-free method! Just create a new bookmark going to the code at the end of this section (ideally in your bookmarks bar) and run it whenever you visit a post. Make sure the URL of your bookmark starts with `javascript:`
 
-Note that the bookmarklet version does *not* provide the floating list of new comments - it only outlines them. Note also that this version doesn't (and cannot) know when you last *visited* the page, only when you last *ran the script* (though runs on a previous visit will be remembered).
+Note that this version doesn't (and cannot) know when you last *visited* the page, only when you last *ran the script* (though any run on a previous visit will be remembered). 
 
-However, the number of new comments will be added to the window title, so you can at least see how much new stuff there is without scrolling around for highlighted comments.
+Note also that the bookmarklet version does *not* provide the floating list of new comments - it only outlines them. However, the number of new comments will be added to the window title, so you can at least see how much new stuff there is without scrolling around for highlighted comments.
 
 Bookmarklet code:
 ```
