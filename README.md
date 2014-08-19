@@ -10,7 +10,7 @@ Installation
 
 Tested only on recent versions of Firefox and Chrome.
 
-Firefox users: Install Greasemonkey and open SSComments/ssc.user.js in Firefox.
+Firefox users: Install Greasemonkey and open [SSComments/ssc.user.js](https://github.com/bakkot/SlateStarComments/raw/master/SSComments/ssc.user.js) in Firefox.
 
 Chrome users: [Install the extension](https://chrome.google.com/webstore/detail/slatestarcomments/aobpboihcjnlhbnjckjaeafncnpaageh)! Or do it the hard way: save SSComments/ssc.user.js to disk, go to `chrome://extensions`, and drag the script onto the main body of the window.
 
