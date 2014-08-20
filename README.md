@@ -3,6 +3,8 @@ Slate Star Comments
 
 Some of the best discussion on the net (if you like a very particular kind of discussion) happens in the comments of Scott Alexander's blog, [Slate Star Codex](http://slatestarcodex.com/). Unfortunately the thread system doesn't make it easy to see when new comments have been posted. This is a bit of code to fix that: comments posted since your last visit (or a time you specify) are outlined, and (if using the UserScript or extension) a small floating window lists them.
 
+As of the most recent version (1.2), it also adds to every comment a new button next to the 'reply' button allowing you to collapse the comment and all of its children.
+
 See [screenshots here](http://imgur.com/a/ThOgM).
 
 Installation

@@ -3,6 +3,7 @@
 // @namespace      http://www.github.com/bakkot
 // @description    Highlight new comments on Slate Star Codex posts
 // @match          http://slatestarcodex.com/20*
+// @version        1.2
 // ==/UserScript==
 
 
@@ -179,3 +180,53 @@ localStorage[pathString] = mostRecent;
 
 // run to reset:
 // localStorage.removeItem('visited-' + location.pathname);
+
+
+
+
+
+
+// *** Add buttons to show/hide threads
+
+function commentToggle() {
+  var myComment = this.parentElement.parentElement;
+  var myBody = myComment.querySelector('div.comment-body');
+  var myMeta = myComment.querySelector('div.comment-meta');
+  var myChildren = myComment.nextElementSibling;
+  if(this.innerHTML == 'Hide') {
+    this.innerHTML = 'Show';
+    myComment.style.opacity = '.6';
+    myBody.style.display = 'none';
+    myMeta.style.display = 'none';
+    if(myChildren) {
+      myChildren.style.display = 'none';
+    }
+  }
+  else {
+    this.innerHTML = 'Hide';
+    myComment.style.opacity = '1';
+    myBody.style.display = 'block';
+    myMeta.style.display = 'block';
+    if(myChildren) {
+      myChildren.style.display = 'block';
+    }
+  }
+  myComment.scrollIntoView(true);
+}
+
+
+var comments = document.querySelectorAll('div.commentholder');
+
+for(var i=0; i<comments.length; ++i) {
+  var hideLink = document.createElement('a');
+  hideLink.className = 'comment-reply-link';
+  hideLink.style.textDecoration = 'underline';
+  hideLink.innerHTML = 'Hide';
+
+  hideLink.addEventListener('click', commentToggle, false);
+
+  var divs = comments[i].children;
+  var replyEle = divs[divs.length-1];
+
+  replyEle.appendChild(hideLink);
+}

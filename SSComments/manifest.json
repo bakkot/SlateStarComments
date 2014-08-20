@@ -1,7 +1,7 @@
 {
   "name": "SlateStarComments",
   "short_name": "SSComments",
-  "version": "1.0",
+  "version": "1.2",
   "description": "Highlight new comments on Slate Star Codex posts.",
   "content_scripts": [
     {
