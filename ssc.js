@@ -174,7 +174,7 @@ if (isNaN(lastVisit)) {
   lastVisit = 0; // prehistory! Actually 1970, which predates all SSC comments, so we're good.
 }
 dateInput.value = (new Date(lastVisit)).toLocaleString();
-var mostRecent = border(lastVisit, true);
+var mostRecent = border(lastVisit, false);
 localStorage[pathString] = mostRecent;
 
 
