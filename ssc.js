@@ -19,7 +19,7 @@ function border(since, updateTitle) {
   
   // Walk comments, setting borders as appropriate and saving new comments in a list
   for(var i = 0; i < commentList.length; ++i) {
-    var postTime = Date.parse(commentList[i].querySelector('.comment-meta a').innerHTML.replace(' at', ''));
+    var postTime = Date.parse(commentList[i].querySelector('.comment-meta a').textContent.replace(' at', ''));
     if (postTime > since) {
       commentList[i].classList.add('new-comment');
       newComments.push({time: postTime, ele: commentList[i]});
@@ -66,8 +66,8 @@ function commentToggle() {
   var myBody = myComment.querySelector('div.comment-body');
   var myMeta = myComment.querySelector('div.comment-meta');
   var myChildren = myComment.nextElementSibling;
-  if(this.innerHTML == 'Hide') {
-    this.innerHTML = 'Show';
+  if(this.textContent == 'Hide') {
+    this.textContent = 'Show';
     myComment.style.opacity = '.6';
     myBody.style.display = 'none';
     myMeta.style.display = 'none';
@@ -76,7 +76,7 @@ function commentToggle() {
     }
   }
   else {
-    this.innerHTML = 'Hide';
+    this.textContent = 'Hide';
     myComment.style.opacity = '1';
     myBody.style.display = 'block';
     myMeta.style.display = 'block';
@@ -98,7 +98,7 @@ function makeHighlight() {
 
   var styleEle = document.createElement('style');
   styleEle.type = 'text/css';
-  styleEle.innerHTML = '.new-comment { border: 2px solid #5a5; }' +
+  styleEle.textContent = '.new-comment { border: 2px solid #5a5; }' +
   '.comments-floater { position: fixed; right: 4px; top: 4px; padding: 2px 5px; width: 230px;font-size: 14px; border-radius: 5px; background: rgba(250, 250, 250, 0.90); }' +
   '.comments-scroller { word-wrap: break-word; max-height: 500px; overflow-y:scroll; }' +
   '.comments-date { font-size: 11px; }' +
@@ -157,7 +157,7 @@ function makeHighlight() {
 
   // The '[+]'
   var hider = document.createElement('span');
-  hider.innerHTML = '[+]';
+  hider.textContent = '[+]';
   hider.className = 'hider';
   hider.addEventListener('click', function(){
     if (commentsScroller.style.display != 'none') {
@@ -220,7 +220,7 @@ function makeShowHide() {
     var hideLink = document.createElement('a');
     hideLink.className = 'comment-reply-link';
     hideLink.style.textDecoration = 'underline';
-    hideLink.innerHTML = 'Hide';
+    hideLink.textContent = 'Hide';
 
     hideLink.addEventListener('click', commentToggle, false);
 
