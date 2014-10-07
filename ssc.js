@@ -151,13 +151,13 @@ function makeHighlight() {
   }, false);
 
 
-  // Container for the comments list and the '[-]'
+  // Container for the comments list and the '[+]'
   divDiv = document.createElement('div');
   divDiv.style.display = 'none';
 
-  // The '[-]'
+  // The '[+]'
   var hider = document.createElement('span');
-  hider.innerHTML = '[-]';
+  hider.innerHTML = '[+]';
   hider.className = 'hider';
   hider.addEventListener('click', function(){
     if (commentsScroller.style.display != 'none') {
