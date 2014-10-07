@@ -99,6 +99,8 @@ function makeHighlight() {
   var styleEle = document.createElement('style');
   styleEle.type = 'text/css';
   styleEle.textContent = '.new-comment { border: 2px solid #5a5; }' +
+  '.new-text { color: #C5C5C5; display: none; }' +
+  '.new-comment .new-text { display: inline; }' +
   '.comments-floater { position: fixed; right: 4px; top: 4px; padding: 2px 5px; width: 230px;font-size: 14px; border-radius: 5px; background: rgba(250, 250, 250, 0.90); }' +
   '.comments-scroller { word-wrap: break-word; max-height: 500px; overflow-y:scroll; }' +
   '.comments-date { font-size: 11px; }' +
@@ -233,9 +235,25 @@ function makeShowHide() {
 
 
 
+function makeNewText() {
+  // *** Add ~new~ to new comments
+  
+  var comments = document.querySelectorAll('div.commentholder');
+
+  for(var i=0; i<comments.length; ++i) {
+    var newText = document.createElement('span');
+    newText.className = 'new-text';
+    newText.textContent = '~new~';
+
+    var meta = comments[i].querySelector('div.comment-meta');
+    meta.appendChild(newText);
+  }
+}
+
 
 // Run iff we're on a page which looks like a post
 if(location.pathname.substring(0, 3) == '/20') {
   makeHighlight();
   makeShowHide();
+  makeNewText();
 }
