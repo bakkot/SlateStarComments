@@ -106,7 +106,7 @@ function makeHighlight() {
   '.cct-span { white-space: nowrap; }' +
   '.date-input { width: 100%; box-sizing: border-box; }' +
   '.input-span { width: 100%; padding-left: 5px; }' +
-  '.hider { position: absolute; left: -19px; top: 6px;}' +
+  '.hider { position: absolute; left: -22px; top: 6px;}' +
   '';
   document.head.appendChild(styleEle);
 
