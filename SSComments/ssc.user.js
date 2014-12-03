@@ -72,7 +72,7 @@ function border(since, updateTitle) {
 function commentToggle() {
   var myComment = this.parentElement.parentElement;
   var myBody = myComment.querySelector('div.comment-body');
-  var myMeta = myComment.querySelector('div.comment-meta');
+  var myMeta = myComment.querySelector('.comment-meta');
   var myChildren = myComment.nextElementSibling;
   if(this.textContent == 'Hide') {
     this.textContent = 'Show';
@@ -224,7 +224,7 @@ function makeHighlight() {
 function makeShowHide() {
   // *** Add buttons to show/hide threads
 
-  var comments = document.querySelectorAll('div.commentholder');
+  var comments = document.querySelectorAll('li.comment');
 
   for(var i=0; i<comments.length; ++i) {
     var hideLink = document.createElement('a');
@@ -253,7 +253,7 @@ function makeNewText() {
     newText.className = 'new-text';
     newText.textContent = '~new~';
 
-    var meta = comments[i].querySelector('div.comment-meta');
+    var meta = comments[i].querySelector('.comment-meta');
     meta.appendChild(newText);
   }
 }
