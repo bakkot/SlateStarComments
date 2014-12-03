@@ -118,7 +118,7 @@ document.body.appendChild(floatBox);
 
 function border(since, updateTitle) {
   lastGivenDate = since;
-  var commentList = document.querySelectorAll('.commentholder');
+  var commentList = document.querySelectorAll('li.comment');
   var mostRecent = since;
   var newComments = [];
   
