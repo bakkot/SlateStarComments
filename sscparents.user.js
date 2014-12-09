@@ -24,7 +24,6 @@ function makeParentLinks() {
     parentLink.style.textDecoration = 'underline';
     parentLink.textContent = '↑';
 
-    var divs = commentList[i].query;
     var replyEle = commentList[i].querySelector('div.reply');
     
     replyEle.appendChild(document.createTextNode(' '));
