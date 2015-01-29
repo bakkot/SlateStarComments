@@ -102,7 +102,7 @@ function makeHighlight() {
   '.new-text { color: #C5C5C5; display: none; }' +
   '.new-comment .new-text { display: inline; }' +
   '.comments-floater { position: fixed; right: 4px; top: 4px; padding: 2px 5px; width: 230px;font-size: 14px; border-radius: 5px; background: rgba(250, 250, 250, 0.90); }' +
-  '.comments-scroller { word-wrap: break-word; max-height: 500px; overflow-y:scroll; }' +
+  '.comments-scroller { word-wrap: break-word; max-height: 500px; max-height: 80vh; overflow-y:scroll; }' +
   '.comments-date { font-size: 11px; }' +
   '.semantic-cell { display: table-cell; }' +
   '.cct-span { white-space: nowrap; }' +
