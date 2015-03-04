@@ -251,9 +251,58 @@ function makeNewText() {
 }
 
 
+
+// ??
+function boustrophedon(justChars) {
+  function mangle(ele) {
+    ele.style.textAlign = 'justify';
+    ele.style.position = 'relative';
+    var compStyle = getComputedStyle(ele);
+    var lineHeight = compStyle.lineHeight;
+    lineHeight = parseInt(lineHeight.substring(0, lineHeight.length-2));
+    var height = compStyle.height;
+    height = parseInt(height.substring(0, height.length-2));
+  
+    var lines = height / lineHeight;
+  
+    var backbase = ele.cloneNode(true);
+    backbase.style.position = 'absolute';
+    backbase.style.top = '0px';
+    backbase.style.left = '0px';
+    if(justChars) {
+      backbase.style.unicodeBidi = 'bidi-override';
+      backbase.style.direction = 'rtl';
+    }
+    else {
+      backbase.style.transform = 'scale(-1, 1)';
+      backbase.style['-webkit-transform'] = 'scale(-1, 1)';
+    }
+    backbase.style.background = 'white';
+
+  
+    for(var i=1; i<lines; i+=2) {
+      var copy = backbase.cloneNode(true);
+      copy.style.clip = 'rect(' + i*lineHeight + 'px, auto, ' + (i+1)*lineHeight + 'px, auto)';
+      console.log(copy);
+      ele.appendChild(copy);
+    }
+  }
+
+
+  var ps = document.querySelectorAll('div.pjgm-postcontent > p');
+  for(var i=0; i<ps.length; ++i) {
+    mangle(ps[i]);
+  }
+}
+
+
+
+
 // Run iff we're on a page which looks like a post
 if(location.pathname.substring(0, 3) == '/20') {
   makeHighlight();
   makeShowHide();
   makeNewText();
 }
+if(location.search == '?boustrophedon') boustrophedon(false);
+if(location.search == '?boustrophedon2') boustrophedon(true);
