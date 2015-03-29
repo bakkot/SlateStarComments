@@ -283,7 +283,6 @@ function boustrophedon(justChars) {
     for(var i=1; i<lines; i+=2) {
       var copy = backbase.cloneNode(true);
       copy.style.clip = 'rect(' + i*lineHeight + 'px, auto, ' + (i+1)*lineHeight + 'px, auto)';
-      console.log(copy);
       ele.appendChild(copy);
     }
   }
