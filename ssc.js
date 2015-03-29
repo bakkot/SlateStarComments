@@ -295,6 +295,33 @@ function boustrophedon(justChars) {
   }
 }
 
+// http://stackoverflow.com/a/25388984
+function getComments(context) {
+  var foundComments = [];
+  var elementPath = [context];
+  while (elementPath.length > 0) {
+    var el = elementPath.pop();
+    for (var i = 0; i < el.childNodes.length; i++) {
+      var node = el.childNodes[i];
+      if (node.nodeType === 8) {
+        foundComments.push(node);
+      } else {
+        elementPath.push(node);
+      }
+    }
+  }
+  return foundComments;
+}
+
+function existsCommentWith(str) {
+  var htmlComments = getComments(document);
+  for (var i = 0; i < htmlComments.length; ++i) {
+    if (htmlComments[i].data.replace(/^\s+|\s+$/g,'') == str) {
+      return true;
+    }
+  }
+  return false;
+}
 
 
 
@@ -304,5 +331,4 @@ if(location.pathname.substring(0, 3) == '/20') {
   makeShowHide();
   makeNewText();
 }
-if(location.search == '?boustrophedon') boustrophedon(false);
-if(location.search == '?boustrophedon2') boustrophedon(true);
+if(location.search == '?boustrophedon' || existsCommentWith('boustrophedon')) boustrophedon(false);
