@@ -253,7 +253,7 @@ function makeNewText() {
 
 
 // ??
-function boustrophedon(justChars) {
+function boustrophedon(justChars, context) {
   function mangle(ele) {
     ele.style.textAlign = 'justify';
     ele.style.position = 'relative';
@@ -287,8 +287,7 @@ function boustrophedon(justChars) {
     }
   }
 
-
-  var ps = document.querySelectorAll('div.pjgm-postcontent > p');
+  var ps = context.querySelectorAll('div.pjgm-postcontent > p');
   for(var i=0; i<ps.length; ++i) {
     mangle(ps[i]);
   }
@@ -312,8 +311,8 @@ function getComments(context) {
   return foundComments;
 }
 
-function existsCommentWith(str) {
-  var htmlComments = getComments(document);
+function existsCommentWith(str, context) {
+  var htmlComments = getComments(context);
   for (var i = 0; i < htmlComments.length; ++i) {
     if (htmlComments[i].data.replace(/^\s+|\s+$/g,'') == str) {
       return true;
@@ -329,5 +328,15 @@ if(location.pathname.substring(0, 3) == '/20') {
   makeHighlight();
   makeShowHide();
   makeNewText();
-  if(location.search == '?boustrophedon' || existsCommentWith('boustrophedon')) boustrophedon(false);
+  
+}
+
+//  if(location.search == '?boustrophedon' || existsCommentWith('boustrophedon')) boustrophedon(false);
+
+
+var posts = document.querySelectorAll('div.post');
+for(var i = 0; i < posts.length; ++i) {
+  if(existsCommentWith('boustrophedon', posts[i])) {
+    boustrophedon(false, posts[i]);
+  }
 }
