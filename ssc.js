@@ -329,5 +329,5 @@ if(location.pathname.substring(0, 3) == '/20') {
   makeHighlight();
   makeShowHide();
   makeNewText();
+  if(location.search == '?boustrophedon' || existsCommentWith('boustrophedon')) boustrophedon(false);
 }
-if(location.search == '?boustrophedon' || existsCommentWith('boustrophedon')) boustrophedon(false);
