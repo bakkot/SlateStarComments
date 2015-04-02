@@ -336,7 +336,7 @@ if(location.pathname.substring(0, 3) == '/20') {
 
 var posts = document.querySelectorAll('div.post');
 for(var i = 0; i < posts.length; ++i) {
-  if(posts[i].querySelector('span#boustrophedona')) {
+  if(posts[i].querySelector('span#boustrophedon')) {
     boustrophedon(false, posts[i]);
   }
 }
