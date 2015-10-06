@@ -252,6 +252,31 @@ function makeNewText() {
 
 
 
+function makeParentLinks() {
+  var commentList = document.querySelectorAll('li.comment');
+  for(var i = 0; i < commentList.length; ++i) {
+    if(commentList[i].parentElement.tagName == 'OL') {
+      continue;
+    }
+    
+    var parent = commentList[i].parentElement.parentElement;
+    var parentID = parent.firstElementChild.id;
+
+    var parentLink = document.createElement('a');
+    parentLink.href = '#' + parentID;
+    parentLink.className = 'comment-reply-link';
+    parentLink.style.textDecoration = 'underline';
+    parentLink.title = 'Parent comment';
+    parentLink.textContent = '↑';
+
+    var replyEle = commentList[i].querySelector('div.reply');
+    replyEle.appendChild(document.createTextNode(' '));
+    replyEle.appendChild(parentLink);
+  }
+}
+
+
+
 // ??
 function boustrophedon(justChars, context) {
   function mangle(ele) {
