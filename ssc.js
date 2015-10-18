@@ -401,7 +401,7 @@ if(location.pathname.substring(0, 3) == '/20') {
   makeHighlight();
   makeShowHide();
   makeNewText();
-  
+  makeParentLinks();
 }
 
 //  if(location.search == '?boustrophedon' || existsCommentWith('boustrophedon')) boustrophedon(false);
