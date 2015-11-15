@@ -88,9 +88,6 @@ function commentToggle() {
 }
 
 
-
-
-
 // ** Set up highlights on first run
 
 function makeHighlight() {
@@ -111,7 +108,6 @@ function makeHighlight() {
   '.hider { position: absolute; left: -22px; top: 6px;}' +
   '';
   document.head.appendChild(styleEle);
-
 
 
   // *** Create and insert the floating list of comments, and its contents
@@ -179,7 +175,6 @@ function makeHighlight() {
   commentsList = document.createElement('ul');
 
 
-
   // Insert all the things we made into each other and ultimately the document.
 
   cctSpan.appendChild(commentCountText);
@@ -196,9 +191,6 @@ function makeHighlight() {
   document.body.appendChild(floatBox);
 
 
-
-
-
   // *** Retrieve the last-visit time from storage, border all comments made after, and save the time of the latest comment in storage for next time 
 
   var pathString = 'visited-' + location.pathname;
@@ -212,66 +204,54 @@ function makeHighlight() {
 }
 
 
-
-function makeShowHide() {
+function makeShowHideNewTextParentLinks() {
   // *** Add buttons to show/hide threads
-
-  var comments = document.querySelectorAll('div.commentholder');
+  // *** Add ~new~ to comments
+  // *** Add link to parent comment
+  
+  var comments = document.querySelectorAll('li.comment');
 
   for(var i=0; i<comments.length; ++i) {
+    var commentHolder = comments[i].querySelector('div.commentholder');
+    
+    // Show/Hide
     var hideLink = document.createElement('a');
     hideLink.className = 'comment-reply-link';
     hideLink.style.textDecoration = 'underline';
+    hideLink.style.cursor = 'pointer';
     hideLink.textContent = 'Hide';
 
     hideLink.addEventListener('click', commentToggle, false);
 
-    var divs = comments[i].children;
+    var divs = commentHolder.children;
     var replyEle = divs[divs.length-1];
 
     replyEle.appendChild(hideLink);
-  }
-}
 
-
-
-function makeNewText() {
-  // *** Add ~new~ to new comments
-  
-  var comments = document.querySelectorAll('div.commentholder');
-
-  for(var i=0; i<comments.length; ++i) {
+    // ~new~
     var newText = document.createElement('span');
     newText.className = 'new-text';
     newText.textContent = '~new~';
 
-    var meta = comments[i].querySelector('div.comment-meta');
+    var meta = commentHolder.querySelector('div.comment-meta');
     meta.appendChild(newText);
-  }
-}
 
+    // Parent link
+    if(comments[i].parentElement.tagName === 'UL') {
+      var parent = comments[i].parentElement.parentElement;
+      var parentID = parent.firstElementChild.id;
 
+      var parentLink = document.createElement('a');
+      parentLink.href = '#' + parentID;
+      parentLink.className = 'comment-reply-link';
+      parentLink.style.textDecoration = 'underline';
+      parentLink.title = 'Parent comment';
+      parentLink.textContent = '↑';
 
-function makeParentLinks() {
-  var commentList = document.querySelectorAll('li.comment');
-  for(var i = 0; i < commentList.length; ++i) {
-    if(commentList[i].parentElement.tagName == 'OL') {
-      continue;
+      var replyEle = commentHolder.querySelector('div.reply');
+      replyEle.appendChild(document.createTextNode(' '));
+      replyEle.appendChild(parentLink);
     }
-    
-    var parent = commentList[i].parentElement.parentElement;
-    var parentID = parent.firstElementChild.id;
-
-    var parentLink = document.createElement('a');
-    parentLink.href = '#' + parentID;
-    parentLink.className = 'comment-reply-link';
-    parentLink.style.textDecoration = 'underline';
-    parentLink.title = 'Parent comment';
-    parentLink.textContent = '↑';
-
-    var replyEle = commentList[i].querySelector('div.reply');
-    replyEle.appendChild(document.createTextNode(' '));
-    replyEle.appendChild(parentLink);
   }
 }
 
@@ -325,6 +305,19 @@ function makeAltHide() {
 }
 
 
+
+
+// Run iff we're on a page which looks like a post
+if(location.pathname.substring(0, 3) == '/20') {
+  makeHighlight();
+  makeShowHideNewTextParentLinks();
+}
+
+
+
+
+
+
 // ??
 function boustrophedon(justChars, context) {
   function mangle(ele) {
@@ -366,45 +359,6 @@ function boustrophedon(justChars, context) {
   }
 }
 
-// http://stackoverflow.com/a/25388984
-function getComments(context) {
-  var foundComments = [];
-  var elementPath = [context];
-  while (elementPath.length > 0) {
-    var el = elementPath.pop();
-    for (var i = 0; i < el.childNodes.length; i++) {
-      var node = el.childNodes[i];
-      if (node.nodeType === 8) {
-        foundComments.push(node);
-      } else {
-        elementPath.push(node);
-      }
-    }
-  }
-  return foundComments;
-}
-
-function existsCommentWith(str, context) {
-  var htmlComments = getComments(context);
-  for (var i = 0; i < htmlComments.length; ++i) {
-    if (htmlComments[i].data.replace(/^\s+|\s+$/g,'') == str) {
-      return true;
-    }
-  }
-  return false;
-}
-
-
-
-// Run iff we're on a page which looks like a post
-if(location.pathname.substring(0, 3) == '/20') {
-  makeHighlight();
-  makeShowHide();
-  makeNewText();
-  makeParentLinks();
-}
-
-//  if(location.search == '?boustrophedon' || existsCommentWith('boustrophedon')) boustrophedon(false);
 
 
 var posts = document.querySelectorAll('div.post');
