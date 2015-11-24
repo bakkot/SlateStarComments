@@ -40,7 +40,7 @@ function border(since, updateTitle) {
   
   // Populate the floating comment list
   commentCountText.data = '' + newCount + ' comment' + (newCount == 1 ? '' : 's') + ' since ';
-  commentsList.innerHTML = '';
+  commentsList.textContent = '';
   if (newCount > 0 ) {
     divDiv.style.display = 'block';
     newComments.sort(function(a, b){return a.time - b.time;});
@@ -48,6 +48,7 @@ function border(since, updateTitle) {
       var ele = newComments[i].ele;
       var newLi = document.createElement('li');
       newLi.innerHTML = ele.querySelector('cite').textContent + ' <span class="comments-date">' + (new Date(newComments[i].time)).toLocaleString() + '</span>';
+      newLi.className = 'comment-list-item';
       newLi.addEventListener('click', function(ele){return function(){ele.scrollIntoView(true);};}(ele));
       commentsList.appendChild(newLi);
     }
@@ -101,6 +102,7 @@ function makeHighlight() {
   '.comments-floater { position: fixed; right: 4px; top: 4px; padding: 2px 5px; width: 230px;font-size: 14px; border-radius: 5px; background: rgba(250, 250, 250, 0.90); }' +
   '.comments-scroller { word-wrap: break-word; max-height: 500px; max-height: 80vh; overflow-y:scroll; }' +
   '.comments-date { font-size: 11px; }' +
+  '.comment-list-item { cursor: pointer; }' +
   '.semantic-cell { display: table-cell; }' +
   '.cct-span { white-space: nowrap; }' +
   '.date-input { width: 100%; box-sizing: border-box; }' +
