@@ -7,6 +7,22 @@ var lastGivenDate, commentCountText, commentsList, divDiv, dateInput, commentsSc
 
 
 
+// *** Date utility functions
+
+function time_fromHuman(string) {
+  /* Convert a human-readable date into a JS timestamp */
+  string = string.replace(' at', '');
+  time = Date.parse(string);
+  return time;
+}
+
+function time_toHuman(time) {
+  /* Convert a JS timestamp into a human-readable date */
+  date = new Date(time);
+  string = date.toLocaleString();  // to human-readable string
+  return string;
+}
+
 
 
 // *** Sets up borders and populates comments list
@@ -19,7 +35,7 @@ function border(since, updateTitle) {
   
   // Walk comments, setting borders as appropriate and saving new comments in a list
   for(var i = 0; i < commentList.length; ++i) {
-    var postTime = Date.parse(commentList[i].querySelector('.comment-meta a').textContent.replace(' at', ''));
+    var postTime = time_fromHuman(commentList[i].querySelector('.comment-meta a').textContent);
     if (postTime > since) {
       commentList[i].classList.add('new-comment');
       newComments.push({time: postTime, ele: commentList[i]});
@@ -47,7 +63,7 @@ function border(since, updateTitle) {
     for(i = 0; i < newCount; ++i) {
       var ele = newComments[i].ele;
       var newLi = document.createElement('li');
-      newLi.innerHTML = ele.querySelector('cite').textContent + ' <span class="comments-date">' + (new Date(newComments[i].time)).toLocaleString() + '</span>';
+      newLi.innerHTML = ele.querySelector('cite').textContent + ' <span class="comments-date">' + time_toHuman(newComments[i].time) + '</span>';
       newLi.className = 'comment-list-item';
       newLi.addEventListener('click', function(ele){return function(){ele.scrollIntoView(true);};}(ele));
       commentsList.appendChild(newLi);
@@ -136,10 +152,10 @@ function makeHighlight() {
   dateInput = document.createElement('input');
   dateInput.className = 'date-input';
   dateInput.addEventListener('blur', function(){
-    var newDate = Date.parse(dateInput.value);
+    var newDate = time_fromHuman(dateInput.value);
     if (isNaN(newDate)) {
       alert('Given date not valid.');
-      dateInput.value = (new Date(lastGivenDate)).toLocaleString();
+      dateInput.value = time_toHuman(lastGivenDate);
       return;
     }
     border(newDate, false);
@@ -200,7 +216,7 @@ function makeHighlight() {
   if (isNaN(lastVisit)) {
     lastVisit = 0; // prehistory! Actually 1970, which predates all SSC comments, so we're good.
   }
-  dateInput.value = (new Date(lastVisit)).toLocaleString();
+  dateInput.value = time_toHuman(lastVisit);
   var mostRecent = border(lastVisit, false);
   localStorage[pathString] = mostRecent;
 }
