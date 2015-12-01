@@ -51,7 +51,7 @@ function border(since, updateTitle) {
   var commentList = document.querySelectorAll('.commentholder');
   var mostRecent = since;
   var newComments = [];
-  
+
   // Walk comments, setting borders as appropriate and saving new comments in a list
   for(var i = 0; i < commentList.length; ++i) {
     var postTime = time_fromHuman(commentList[i].querySelector('.comment-meta a').textContent);
@@ -67,12 +67,12 @@ function border(since, updateTitle) {
     }
   }
   var newCount = newComments.length;
-  
+
   // Maybe add new comment count to title
   if (updateTitle) {
     document.title = '(' + newCount + ') ' + document.title;
   }
-  
+
   // Populate the floating comment list
   commentCountText.data = '' + newCount + ' comment' + (newCount == 1 ? '' : 's') + ' since ';
   commentsList.textContent = '';
@@ -213,7 +213,7 @@ function makeHighlight() {
     }
   }, false);
 
-  // Scrollable container for the comments list 
+  // Scrollable container for the comments list
   commentsScroller = document.createElement('div');
   commentsScroller.className = 'comments-scroller';
   commentsScroller.style.display = 'none';
@@ -237,7 +237,7 @@ function makeHighlight() {
   document.body.appendChild(floatBox);
 
 
-  // *** Retrieve the last-visit time from storage, border all comments made after, and save the time of the latest comment in storage for next time 
+  // *** Retrieve the last-visit time from storage, border all comments made after, and save the time of the latest comment in storage for next time
 
   var pathString = 'visited-' + location.pathname;
   var lastVisit = parseInt(localStorage[pathString]);
@@ -254,12 +254,12 @@ function makeShowHideNewTextParentLinks() {
   // *** Add buttons to show/hide threads
   // *** Add ~new~ to comments
   // *** Add link to parent comment
-  
+
   var comments = document.querySelectorAll('li.comment');
 
   for(var i=0; i<comments.length; ++i) {
     var commentHolder = comments[i].querySelector('div.commentholder');
-    
+
     // Show/Hide
     var hideLink = document.createElement('a');
     hideLink.className = 'comment-reply-link';
@@ -374,9 +374,9 @@ function boustrophedon(justChars, context) {
     lineHeight = parseInt(lineHeight.substring(0, lineHeight.length-2));
     var height = compStyle.height;
     height = parseInt(height.substring(0, height.length-2));
-  
+
     var lines = height / lineHeight;
-  
+
     var backbase = ele.cloneNode(true);
     backbase.style.position = 'absolute';
     backbase.style.top = '0px';
@@ -391,7 +391,7 @@ function boustrophedon(justChars, context) {
     }
     backbase.style.background = 'white';
 
-  
+
     for(var i=1; i<lines; i+=2) {
       var copy = backbase.cloneNode(true);
       copy.style.clip = 'rect(' + i*lineHeight + 'px, auto, ' + (i+1)*lineHeight + 'px, auto)';
