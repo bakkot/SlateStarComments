@@ -143,8 +143,9 @@ function makeHighlight() {
   // at some point, it must cover the main content, we just keep space for [+] / [-]
   '@media (max-width: 1023px) { .comments-floater { max-width: calc(100% - 40px); } }' +
   '.comments-scroller { word-wrap: break-word; max-height: 80vh; overflow-y: scroll; }' +
-  '.comments-date { font-size: 11px; }' +
-  '.comment-list-item { cursor: pointer; }' +
+  '.comment-list-item { cursor: pointer; clear: both; }' +
+  '.comments-date { font-size: 11px; display: block; }' +
+  '@media (min-width:900px) { .comments-date { display: inline-block; text-align: right; float: right; padding-right: 1em; } }' +
   '.cct-span { white-space: nowrap; }' +
   // the full date will fit the input on large screens; on smaller screens, it will shrink to avoid wrapping
   '.date-input { margin-left: .5em; min-width: 3ex; max-width: 10em; width: calc(100% - 153px); }' +
