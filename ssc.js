@@ -138,10 +138,8 @@ function makeHighlight() {
   '.comments-scroller { word-wrap: break-word; max-height: 500px; max-height: 80vh; overflow-y:scroll; }' +
   '.comments-date { font-size: 11px; }' +
   '.comment-list-item { cursor: pointer; }' +
-  '.semantic-cell { display: table-cell; }' +
   '.cct-span { white-space: nowrap; }' +
-  '.date-input { width: 100%; box-sizing: border-box; }' +
-  '.input-span { width: 100%; padding-left: 5px; }' +
+  '.date-input { margin-left: .5em; }' +
   '.hider { position: absolute; left: -22px; top: 6px;}' +
   '';
   document.head.appendChild(styleEle);
@@ -157,15 +155,10 @@ function makeHighlight() {
 
   // Container for the text node below.
   var cctSpan = document.createElement('span');
-  cctSpan.className = 'semantic-cell cct-span';
+  cctSpan.className = 'cct-span';
 
   // The text node which says 'x comments since'
   commentCountText = document.createTextNode('');
-
-
-  // Container for the text box below.
-  var inputSpan = document.createElement('span');
-  inputSpan.className = 'semantic-cell input-span';
 
   // The text box with the date.
   dateInput = document.createElement('input');
@@ -217,8 +210,7 @@ function makeHighlight() {
   cctSpan.appendChild(commentCountText);
   floatBox.appendChild(cctSpan);
 
-  inputSpan.appendChild(dateInput);
-  floatBox.appendChild(inputSpan);
+  floatBox.appendChild(dateInput);
 
   divDiv.appendChild(hider);
   commentsScroller.appendChild(commentsList);
