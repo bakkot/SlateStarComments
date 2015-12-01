@@ -11,15 +11,34 @@ var lastGivenDate, commentCountText, commentsList, divDiv, dateInput, commentsSc
 
 function time_fromHuman(string) {
   /* Convert a human-readable date into a JS timestamp */
-  string = string.replace(' at', '');
-  time = Date.parse(string);
+  if (string.match(/^[0-9]{4}-[0-9]{2}-[0-9]{2}/)) {
+    string = string.replace(' ', 'T');  // revert nice spacing
+    string += ':00.000Z';  // complete ISO 8601 date
+    time = Date.parse(string);  // milliseconds since epoch
+
+    // browsers handle ISO 8601 without explicit timezone differently
+    // thus, we have to fix that by hand
+    time += (new Date()).getTimezoneOffset() * 60e3;
+  }
+  else {
+    string = string.replace(' at', '');
+    time = Date.parse(string);  // milliseconds since epoch
+  }
   return time;
 }
 
 function time_toHuman(time) {
   /* Convert a JS timestamp into a human-readable date */
+
+  // note: time is milliseconds since epoch
+
+  // keep client offset from messing with server time
+  time -= (new Date()).getTimezoneOffset() * 60e3;
+
   date = new Date(time);
-  string = date.toLocaleString();  // to human-readable string
+  string = date.toISOString();  // to ISO 8601
+  string = string.slice(0, 16);  // remove seconds, milliseconds and UTC mark
+  string = string.replace('T', ' ');  // use more readable separator
   return string;
 }
 
