@@ -134,12 +134,19 @@ function makeHighlight() {
   styleEle.textContent = '.new-comment { border: 2px solid #5a5; }' +
   '.new-text { color: #C5C5C5; display: none; }' +
   '.new-comment .new-text { display: inline; }' +
-  '.comments-floater { position: fixed; right: 4px; top: 4px; padding: 2px 5px; width: 230px;font-size: 14px; border-radius: 5px; background: rgba(250, 250, 250, 0.90); }' +
-  '.comments-scroller { word-wrap: break-word; max-height: 500px; max-height: 80vh; overflow-y:scroll; }' +
+  '.comments-floater { position: fixed; right: 4px; top: 4px; padding: 2px 5px; font-size: 14px; border-radius: 5px; background: rgba(250, 250, 250, 0.90); }' +
+  // available space on the right = right bar (230px) + page margin ((screen.width - #pjgm-wrap.width) / 2)
+  '                             .comments-floater { max-width: calc(230px + (100% - 1258px) / 2); }' +
+  '@media (max-width: 1274px) { .comments-floater { max-width: calc(230px + (100% - 1195px) / 2); } }' +
+  '@media (max-width: 1214px) { .comments-floater { max-width: calc(230px + (100% - 1113px) / 2); } }' +
+  '@media (max-width: 1134px) { .comments-floater { max-width: calc(230px + (100% -  866px) / 2); } }' +
+  '@media (max-width: 1023px) { .comments-floater { max-width: none; } }' +  // at some point, it must cover the main content
+  '.comments-scroller { word-wrap: break-word; max-height: 80vh; overflow-y: scroll; }' +
   '.comments-date { font-size: 11px; }' +
   '.comment-list-item { cursor: pointer; }' +
   '.cct-span { white-space: nowrap; }' +
-  '.date-input { margin-left: .5em; }' +
+  // the full date will fit the input on large screens; on smaller screens, it will shrink to avoid wrapping
+  '.date-input { margin-left: .5em; min-width: 3ex; max-width: 10em; width: calc(100% - 140px); }' +
   '.hider { position: absolute; left: -22px; top: 6px;}' +
   '';
   document.head.appendChild(styleEle);
