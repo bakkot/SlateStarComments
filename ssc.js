@@ -353,8 +353,8 @@ function makeAltHide() {
 
 
 
-// Run iff we're on a page which looks like a post
-if(location.pathname.substring(0, 3) == '/20') {
+// Run on pages with comments
+if (document.querySelector('#comments')) {
   makeHighlight();
   makeShowHideNewTextParentLinks();
 }
