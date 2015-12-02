@@ -150,7 +150,9 @@ function makeHighlight() {
   // the full date will fit the input on large screens; on smaller screens, it will shrink to avoid wrapping
   '.date-input { margin-left: .5em; min-width: 3ex; max-width: 10em; width: calc(100% - 153px); }' +
   '@media (max-width: 300px) { .date-input { width: auto; } }' +
-  '.hider { position: absolute; left: -22px; top: 6px;}' +
+  '.hider { position: absolute; left: -25px; top: 6px; display: inline-block; width: 25px; text-align: center; }' +
+  '.hider::before { content: "["; float: left; }' +
+  '.hider::after { content: "]"; float: right; }' +
   '';
   document.head.appendChild(styleEle);
 
@@ -198,14 +200,16 @@ function makeHighlight() {
 
   // The '[+]'
   var hider = document.createElement('span');
-  hider.textContent = '[+]';
+  hider.textContent = '+';
   hider.className = 'hider';
   hider.addEventListener('click', function(){
     if (commentsScroller.style.display != 'none') {
       commentsScroller.style.display = 'none';
+      hider.textContent = '+';
     }
     else {
       commentsScroller.style.display = '';
+      hider.textContent = '-';
     }
   }, false);
 
