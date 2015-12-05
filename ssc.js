@@ -175,8 +175,11 @@ function makeHighlight() {
   dateInput.addEventListener('blur', function(){
     var newDate = time_fromHuman(dateInput.value);
     if (isNaN(newDate)) {
-      alert('Given date not valid.');
-      dateInput.value = time_toHuman(lastGivenDate);
+      alert(
+        'Sorry, I do not understand “' + dateInput.value + '”.\n' +
+        'Please use either “YYYY-MM-DD HH:mm”\n' +
+        'or the same format as in comments.'
+      );
       return;
     }
     border(newDate, false);
