@@ -297,6 +297,19 @@ function makeShowHideNewTextParentLinks() {
       replyEle.appendChild(document.createTextNode(' '));
       replyEle.appendChild(parentLink);
     }
+
+    // Newer comments
+    var newerLink = document.createElement('a');
+    newerLink.textContent = 'Newer';
+    newerLink.style.textDecoration = 'underline';
+    newerLink.onclick = function(e) {
+      var dateInput = $('.date-input');
+      var time = time_fromHuman($('.comment-meta a', comment).textContent);
+      dateInput.value = time_toHuman(time);
+      border(time, false);
+    };
+    replyEle.appendChild(document.createTextNode(' '));
+    replyEle.appendChild(newerLink);
   }
 }
 
