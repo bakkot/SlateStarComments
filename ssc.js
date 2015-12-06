@@ -175,7 +175,7 @@ function makeHighlight() {
   // The text box with the date.
   dateInput = document.createElement('input');
   dateInput.className = 'date-input';
-  dateInput.addEventListener('blur', function(){
+  dateInput.addEventListener('blur', function(e) {
     var newDate = time_fromHuman(dateInput.value);
     if (isNaN(newDate)) {
       alert(
@@ -186,12 +186,12 @@ function makeHighlight() {
       return;
     }
     border(newDate, false);
-  }, false);
-  dateInput.addEventListener('keypress', function(e){
+  });
+  dateInput.addEventListener('keypress', function(e) {
     if (e.keyCode === 13) {
       dateInput.blur();
     }
-  }, false);
+  });
 
 
   // Container for the comments list and the '[+]'
@@ -202,7 +202,7 @@ function makeHighlight() {
   var hider = document.createElement('span');
   hider.textContent = '+';
   hider.className = 'hider';
-  hider.addEventListener('click', function(){
+  hider.addEventListener('click', function(e) {
     if (commentsScroller.style.display != 'none') {
       commentsScroller.style.display = 'none';
       hider.textContent = '+';
@@ -211,7 +211,7 @@ function makeHighlight() {
       commentsScroller.style.display = '';
       hider.textContent = '-';
     }
-  }, false);
+  });
 
   // Scrollable container for the comments list
   commentsScroller = document.createElement('div');
@@ -267,7 +267,7 @@ function makeShowHideNewTextParentLinks() {
     hideLink.style.cursor = 'pointer';
     hideLink.textContent = 'Hide';
 
-    hideLink.addEventListener('click', commentToggle, false);
+    hideLink.addEventListener('click', commentToggle);
 
     var divs = commentHolder.children;
     var replyEle = divs[divs.length-1];
