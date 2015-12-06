@@ -301,58 +301,6 @@ function makeShowHideNewTextParentLinks() {
   }
 }
 
-
-
-function altCommentToggle(e) {
-  e.preventDefault();
-  var myComment = this.parentElement;
-  var myBody = myComment.querySelector('div.comment-body');
-  var myMeta = myComment.querySelector('div.comment-meta');
-  var myChildren = myComment.nextElementSibling;
-  if(this.textContent == '[-]') {
-    this.textContent = '[+]';
-    myComment.style.opacity = '.6';
-    myBody.style.display = 'none';
-    myMeta.style.display = 'none';
-    if(myChildren) {
-      myChildren.style.display = 'none';
-    }
-  }
-  else {
-    this.textContent = '[-]';
-    myComment.style.opacity = '1';
-    myBody.style.display = 'block';
-    myMeta.style.display = 'block';
-    if(myChildren) {
-      myChildren.style.display = 'block';
-    }
-  }
-  //myComment.scrollIntoView(true);
-  return false;
-}
-
-
-function makeAltHide() {
-  var comments = document.querySelectorAll('div.commentholder');
-
-  for(var i=0; i<comments.length; ++i) {
-    var hideLink = document.createElement('a');
-    hideLink.href = '#';
-    hideLink.className = 'comment-edit-link';
-    hideLink.style.float = 'right';
-    hideLink.style.textDecoration = 'none';
-    hideLink.title = 'Show/hide';
-    hideLink.textContent = '[-]';
-
-    hideLink.addEventListener('click', altCommentToggle, false);
-
-    comments[i].insertBefore(hideLink, comments[i].firstChild);
-  }
-}
-
-
-
-
 // Run on pages with comments
 if (document.querySelector('#comments')) {
   makeHighlight();
