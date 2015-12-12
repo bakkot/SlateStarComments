@@ -7,6 +7,41 @@ var lastGivenDate, commentCountText, commentsList, divDiv, dateInput, commentsSc
 
 
 
+// *** Date utility functions
+
+function time_fromHuman(string) {
+  /* Convert a human-readable date into a JS timestamp */
+  if (string.match(/^[0-9]{4}-[0-9]{2}-[0-9]{2}/)) {
+    string = string.replace(' ', 'T');  // revert nice spacing
+    string += ':00.000Z';  // complete ISO 8601 date
+    time = Date.parse(string);  // milliseconds since epoch
+
+    // browsers handle ISO 8601 without explicit timezone differently
+    // thus, we have to fix that by hand
+    time += (new Date()).getTimezoneOffset() * 60e3;
+  }
+  else {
+    string = string.replace(' at', '');
+    time = Date.parse(string);  // milliseconds since epoch
+  }
+  return time;
+}
+
+function time_toHuman(time) {
+  /* Convert a JS timestamp into a human-readable date */
+
+  // note: time is milliseconds since epoch
+
+  // keep client offset from messing with server time
+  time -= (new Date()).getTimezoneOffset() * 60e3;
+
+  date = new Date(time);
+  string = date.toISOString();  // to ISO 8601
+  string = string.slice(0, 16);  // remove seconds, milliseconds and UTC mark
+  string = string.replace('T', ' ');  // use more readable separator
+  return string;
+}
+
 
 
 // *** Sets up borders and populates comments list
@@ -19,7 +54,7 @@ function border(since, updateTitle) {
   
   // Walk comments, setting borders as appropriate and saving new comments in a list
   for(var i = 0; i < commentList.length; ++i) {
-    var postTime = Date.parse(commentList[i].querySelector('.comment-meta a').textContent.replace(' at', ''));
+    var postTime = time_fromHuman(commentList[i].querySelector('.comment-meta a').textContent);
     if (postTime > since) {
       commentList[i].classList.add('new-comment');
       newComments.push({time: postTime, ele: commentList[i]});
@@ -47,7 +82,7 @@ function border(since, updateTitle) {
     for(i = 0; i < newCount; ++i) {
       var ele = newComments[i].ele;
       var newLi = document.createElement('li');
-      newLi.innerHTML = ele.querySelector('cite').textContent + ' <span class="comments-date">' + (new Date(newComments[i].time)).toLocaleString() + '</span>';
+      newLi.innerHTML = ele.querySelector('cite').textContent + ' <span class="comments-date">' + time_toHuman(newComments[i].time) + '</span>';
       newLi.className = 'comment-list-item';
       newLi.addEventListener('click', function(ele){return function(){ele.scrollIntoView(true);};}(ele));
       commentsList.appendChild(newLi);
@@ -99,14 +134,19 @@ function makeHighlight() {
   styleEle.textContent = '.new-comment { border: 2px solid #5a5; }' +
   '.new-text { color: #C5C5C5; display: none; }' +
   '.new-comment .new-text { display: inline; }' +
-  '.comments-floater { position: fixed; right: 4px; top: 4px; padding: 2px 5px; width: 230px;font-size: 14px; border-radius: 5px; background: rgba(250, 250, 250, 0.90); }' +
-  '.comments-scroller { word-wrap: break-word; max-height: 500px; max-height: 80vh; overflow-y:scroll; }' +
+  '.comments-floater { position: fixed; right: 4px; top: 4px; padding: 2px 5px; font-size: 14px; border-radius: 5px; background: rgba(250, 250, 250, 0.90); }' +
+  // available space on the right = right bar (230px) + page margin ((screen.width - #pjgm-wrap.width) / 2)
+  '                             .comments-floater { max-width: calc(230px + (100% - 1258px) / 2); }' +
+  '@media (max-width: 1274px) { .comments-floater { max-width: calc(230px + (100% - 1195px) / 2); } }' +
+  '@media (max-width: 1214px) { .comments-floater { max-width: calc(230px + (100% - 1113px) / 2); } }' +
+  '@media (max-width: 1134px) { .comments-floater { max-width: calc(230px + (100% -  866px) / 2); } }' +
+  '@media (max-width: 1023px) { .comments-floater { max-width: none; } }' +  // at some point, it must cover the main content
+  '.comments-scroller { word-wrap: break-word; max-height: 80vh; overflow-y: scroll; }' +
   '.comments-date { font-size: 11px; }' +
   '.comment-list-item { cursor: pointer; }' +
-  '.semantic-cell { display: table-cell; }' +
   '.cct-span { white-space: nowrap; }' +
-  '.date-input { width: 100%; box-sizing: border-box; }' +
-  '.input-span { width: 100%; padding-left: 5px; }' +
+  // the full date will fit the input on large screens; on smaller screens, it will shrink to avoid wrapping
+  '.date-input { margin-left: .5em; min-width: 3ex; max-width: 10em; width: calc(100% - 140px); }' +
   '.hider { position: absolute; left: -22px; top: 6px;}' +
   '';
   document.head.appendChild(styleEle);
@@ -122,24 +162,19 @@ function makeHighlight() {
 
   // Container for the text node below.
   var cctSpan = document.createElement('span');
-  cctSpan.className = 'semantic-cell cct-span';
+  cctSpan.className = 'cct-span';
 
   // The text node which says 'x comments since'
   commentCountText = document.createTextNode('');
-
-
-  // Container for the text box below.
-  var inputSpan = document.createElement('span');
-  inputSpan.className = 'semantic-cell input-span';
 
   // The text box with the date.
   dateInput = document.createElement('input');
   dateInput.className = 'date-input';
   dateInput.addEventListener('blur', function(){
-    var newDate = Date.parse(dateInput.value);
+    var newDate = time_fromHuman(dateInput.value);
     if (isNaN(newDate)) {
       alert('Given date not valid.');
-      dateInput.value = (new Date(lastGivenDate)).toLocaleString();
+      dateInput.value = time_toHuman(lastGivenDate);
       return;
     }
     border(newDate, false);
@@ -182,8 +217,7 @@ function makeHighlight() {
   cctSpan.appendChild(commentCountText);
   floatBox.appendChild(cctSpan);
 
-  inputSpan.appendChild(dateInput);
-  floatBox.appendChild(inputSpan);
+  floatBox.appendChild(dateInput);
 
   divDiv.appendChild(hider);
   commentsScroller.appendChild(commentsList);
@@ -200,7 +234,7 @@ function makeHighlight() {
   if (isNaN(lastVisit)) {
     lastVisit = 0; // prehistory! Actually 1970, which predates all SSC comments, so we're good.
   }
-  dateInput.value = (new Date(lastVisit)).toLocaleString();
+  dateInput.value = time_toHuman(lastVisit);
   var mostRecent = border(lastVisit, false);
   localStorage[pathString] = mostRecent;
 }
