@@ -140,13 +140,15 @@ function makeHighlight() {
   '@media (max-width: 1274px) { .comments-floater { max-width: calc(230px + (100% - 1195px) / 2); } }' +
   '@media (max-width: 1214px) { .comments-floater { max-width: calc(230px + (100% - 1113px) / 2); } }' +
   '@media (max-width: 1134px) { .comments-floater { max-width: calc(230px + (100% -  866px) / 2); } }' +
-  '@media (max-width: 1023px) { .comments-floater { max-width: none; } }' +  // at some point, it must cover the main content
+  // at some point, it must cover the main content, we just keep space for [+] / [-]
+  '@media (max-width: 1023px) { .comments-floater { max-width: calc(100% - 40px); } }' +
   '.comments-scroller { word-wrap: break-word; max-height: 80vh; overflow-y: scroll; }' +
   '.comments-date { font-size: 11px; }' +
   '.comment-list-item { cursor: pointer; }' +
   '.cct-span { white-space: nowrap; }' +
   // the full date will fit the input on large screens; on smaller screens, it will shrink to avoid wrapping
-  '.date-input { margin-left: .5em; min-width: 3ex; max-width: 10em; width: calc(100% - 140px); }' +
+  '.date-input { margin-left: .5em; min-width: 3ex; max-width: 10em; width: calc(100% - 153px); }' +
+  '@media (max-width: 300px) { .date-input { width: auto; } }' +
   '.hider { position: absolute; left: -22px; top: 6px;}' +
   '';
   document.head.appendChild(styleEle);
