@@ -3,7 +3,7 @@
 
 
 // Global variables are fun!
-var lastGivenDate, commentCountText, commentsList, divDiv, dateInput, commentsScroller;
+var commentCountText, commentsList, divDiv;
 
 
 
@@ -47,7 +47,6 @@ function time_toHuman(time) {
 // *** Sets up borders and populates comments list
 
 function border(since, updateTitle) {
-  lastGivenDate = since;
   var commentList = document.querySelectorAll('.commentholder');
   var mostRecent = since;
   var newComments = [];
@@ -173,7 +172,7 @@ function makeHighlight() {
   commentCountText = document.createTextNode('');
 
   // The text box with the date.
-  dateInput = document.createElement('input');
+  var dateInput = document.createElement('input');
   dateInput.className = 'date-input';
   dateInput.addEventListener('blur', function(e) {
     var newDate = time_fromHuman(dateInput.value);
@@ -198,6 +197,11 @@ function makeHighlight() {
   divDiv = document.createElement('div');
   divDiv.style.display = 'none';
 
+  // Scrollable container for the comments list
+  var commentsScroller = document.createElement('div');
+  commentsScroller.className = 'comments-scroller';
+  commentsScroller.style.display = 'none';
+
   // The '[+]'
   var hider = document.createElement('span');
   hider.textContent = '+';
@@ -212,11 +216,6 @@ function makeHighlight() {
       hider.textContent = '-';
     }
   });
-
-  // Scrollable container for the comments list
-  commentsScroller = document.createElement('div');
-  commentsScroller.className = 'comments-scroller';
-  commentsScroller.style.display = 'none';
 
   // Actual list of comments
   commentsList = document.createElement('ul');
