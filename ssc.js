@@ -140,7 +140,7 @@ function makeHighlight() {
   '@media (max-width: 1214px) { .comments-floater { max-width: calc(230px + (100% - 1113px) / 2); } }' +
   '@media (max-width: 1134px) { .comments-floater { max-width: calc(230px + (100% -  866px) / 2); } }' +
   // at some point, it must cover the main content, we just keep space for [+] / [-]
-  '@media (max-width: 1023px) { .comments-floater { max-width: calc(100% - 40px); } }' +
+  '@media (max-width: 850px) { .comments-floater { max-width: 230px; } }' +
   '.comments-scroller { word-wrap: break-word; max-height: 80vh; overflow-y: scroll; }' +
   '.comment-list-item { cursor: pointer; clear: both; }' +
   '.comments-date { font-size: 11px; display: block; }' +
@@ -149,7 +149,7 @@ function makeHighlight() {
   // the full date will fit the input on large screens; on smaller screens, it will shrink to avoid wrapping
   '.date-input { margin-left: .5em; min-width: 3ex; max-width: 10em; width: calc(100% - 153px); }' +
   '@media (max-width: 300px) { .date-input { width: auto; } }' +
-  '.hider { position: absolute; left: -25px; top: 6px; display: inline-block; width: 25px; text-align: center; }' +
+  '.hider { position: absolute; left: -25px; top: 6px; display: inline-block; width: 20px; text-align: center; }' +
   '.hider::before { content: "["; float: left; }' +
   '.hider::after { content: "]"; float: right; }' +
   '';
@@ -178,9 +178,9 @@ function makeHighlight() {
     var newDate = time_fromHuman(dateInput.value);
     if (isNaN(newDate)) {
       alert(
-        'Sorry, I do not understand “' + dateInput.value + '”.\n' +
-        'Please use either “YYYY-MM-DD HH:mm”\n' +
-        'or the same format as in comments.'
+        'Couldn\'t parse given date. ' +
+        'Use either YYYY-MM-DD HH:mm ' +
+        'or the format used for comments.'
       );
       return;
     }
@@ -297,19 +297,6 @@ function makeShowHideNewTextParentLinks() {
       replyEle.appendChild(document.createTextNode(' '));
       replyEle.appendChild(parentLink);
     }
-
-    // Newer comments
-    var newerLink = document.createElement('a');
-    newerLink.textContent = 'Newer';
-    newerLink.style.textDecoration = 'underline';
-    newerLink.onclick = function(e) {
-      var dateInput = $('.date-input');
-      var time = time_fromHuman($('.comment-meta a', comment).textContent);
-      dateInput.value = time_toHuman(time);
-      border(time, false);
-    };
-    replyEle.appendChild(document.createTextNode(' '));
-    replyEle.appendChild(newerLink);
   }
 }
 
