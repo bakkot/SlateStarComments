@@ -3,7 +3,7 @@
 
 
 // Global variables are fun!
-var lastGivenDate, commentCountText, commentsList, divDiv, dateInput, commentsScroller;
+var commentCountText, commentsList, divDiv;
 
 
 
@@ -47,11 +47,10 @@ function time_toHuman(time) {
 // *** Sets up borders and populates comments list
 
 function border(since, updateTitle) {
-  lastGivenDate = since;
   var commentList = document.querySelectorAll('.commentholder');
   var mostRecent = since;
   var newComments = [];
-  
+
   // Walk comments, setting borders as appropriate and saving new comments in a list
   for(var i = 0; i < commentList.length; ++i) {
     var postTime = time_fromHuman(commentList[i].querySelector('.comment-meta a').textContent);
@@ -67,12 +66,12 @@ function border(since, updateTitle) {
     }
   }
   var newCount = newComments.length;
-  
+
   // Maybe add new comment count to title
   if (updateTitle) {
     document.title = '(' + newCount + ') ' + document.title;
   }
-  
+
   // Populate the floating comment list
   commentCountText.data = '' + newCount + ' comment' + (newCount == 1 ? '' : 's') + ' since ';
   commentsList.textContent = '';
@@ -140,14 +139,19 @@ function makeHighlight() {
   '@media (max-width: 1274px) { .comments-floater { max-width: calc(230px + (100% - 1195px) / 2); } }' +
   '@media (max-width: 1214px) { .comments-floater { max-width: calc(230px + (100% - 1113px) / 2); } }' +
   '@media (max-width: 1134px) { .comments-floater { max-width: calc(230px + (100% -  866px) / 2); } }' +
-  '@media (max-width: 1023px) { .comments-floater { max-width: none; } }' +  // at some point, it must cover the main content
+  // at some point, it must cover the main content, we just keep space for [+] / [-]
+  '@media (max-width: 850px) { .comments-floater { max-width: 230px; } }' +
   '.comments-scroller { word-wrap: break-word; max-height: 80vh; overflow-y: scroll; }' +
-  '.comments-date { font-size: 11px; }' +
-  '.comment-list-item { cursor: pointer; }' +
+  '.comment-list-item { cursor: pointer; clear: both; }' +
+  '.comments-date { font-size: 11px; display: block; }' +
+  '@media (min-width:900px) { .comments-date { display: inline-block; text-align: right; float: right; padding-right: 1em; } }' +
   '.cct-span { white-space: nowrap; }' +
   // the full date will fit the input on large screens; on smaller screens, it will shrink to avoid wrapping
-  '.date-input { margin-left: .5em; min-width: 3ex; max-width: 10em; width: calc(100% - 140px); }' +
-  '.hider { position: absolute; left: -22px; top: 6px;}' +
+  '.date-input { margin-left: .5em; min-width: 3ex; max-width: 10em; width: calc(100% - 153px); }' +
+  '@media (max-width: 300px) { .date-input { width: auto; } }' +
+  '.hider { position: absolute; left: -25px; top: 6px; display: inline-block; width: 20px; text-align: center; }' +
+  '.hider::before { content: "["; float: left; }' +
+  '.hider::after { content: "]"; float: right; }' +
   '';
   document.head.appendChild(styleEle);
 
@@ -168,45 +172,50 @@ function makeHighlight() {
   commentCountText = document.createTextNode('');
 
   // The text box with the date.
-  dateInput = document.createElement('input');
+  var dateInput = document.createElement('input');
   dateInput.className = 'date-input';
-  dateInput.addEventListener('blur', function(){
+  dateInput.addEventListener('blur', function(e) {
     var newDate = time_fromHuman(dateInput.value);
     if (isNaN(newDate)) {
-      alert('Given date not valid.');
-      dateInput.value = time_toHuman(lastGivenDate);
+      alert(
+        'Couldn\'t parse given date. ' +
+        'Use either YYYY-MM-DD HH:mm ' +
+        'or the format used for comments.'
+      );
       return;
     }
     border(newDate, false);
-  }, false);
-  dateInput.addEventListener('keypress', function(e){
+  });
+  dateInput.addEventListener('keypress', function(e) {
     if (e.keyCode === 13) {
       dateInput.blur();
     }
-  }, false);
+  });
 
 
   // Container for the comments list and the '[+]'
   divDiv = document.createElement('div');
   divDiv.style.display = 'none';
 
+  // Scrollable container for the comments list
+  var commentsScroller = document.createElement('div');
+  commentsScroller.className = 'comments-scroller';
+  commentsScroller.style.display = 'none';
+
   // The '[+]'
   var hider = document.createElement('span');
-  hider.textContent = '[+]';
+  hider.textContent = '+';
   hider.className = 'hider';
-  hider.addEventListener('click', function(){
+  hider.addEventListener('click', function(e) {
     if (commentsScroller.style.display != 'none') {
       commentsScroller.style.display = 'none';
+      hider.textContent = '+';
     }
     else {
       commentsScroller.style.display = '';
+      hider.textContent = '-';
     }
-  }, false);
-
-  // Scrollable container for the comments list 
-  commentsScroller = document.createElement('div');
-  commentsScroller.className = 'comments-scroller';
-  commentsScroller.style.display = 'none';
+  });
 
   // Actual list of comments
   commentsList = document.createElement('ul');
@@ -227,7 +236,7 @@ function makeHighlight() {
   document.body.appendChild(floatBox);
 
 
-  // *** Retrieve the last-visit time from storage, border all comments made after, and save the time of the latest comment in storage for next time 
+  // *** Retrieve the last-visit time from storage, border all comments made after, and save the time of the latest comment in storage for next time
 
   var pathString = 'visited-' + location.pathname;
   var lastVisit = parseInt(localStorage[pathString]);
@@ -244,12 +253,12 @@ function makeShowHideNewTextParentLinks() {
   // *** Add buttons to show/hide threads
   // *** Add ~new~ to comments
   // *** Add link to parent comment
-  
+
   var comments = document.querySelectorAll('li.comment');
 
   for(var i=0; i<comments.length; ++i) {
     var commentHolder = comments[i].querySelector('div.commentholder');
-    
+
     // Show/Hide
     var hideLink = document.createElement('a');
     hideLink.className = 'comment-reply-link';
@@ -257,7 +266,7 @@ function makeShowHideNewTextParentLinks() {
     hideLink.style.cursor = 'pointer';
     hideLink.textContent = 'Hide';
 
-    hideLink.addEventListener('click', commentToggle, false);
+    hideLink.addEventListener('click', commentToggle);
 
     var divs = commentHolder.children;
     var replyEle = divs[divs.length-1];
@@ -291,60 +300,8 @@ function makeShowHideNewTextParentLinks() {
   }
 }
 
-
-
-function altCommentToggle(e) {
-  e.preventDefault();
-  var myComment = this.parentElement;
-  var myBody = myComment.querySelector('div.comment-body');
-  var myMeta = myComment.querySelector('div.comment-meta');
-  var myChildren = myComment.nextElementSibling;
-  if(this.textContent == '[-]') {
-    this.textContent = '[+]';
-    myComment.style.opacity = '.6';
-    myBody.style.display = 'none';
-    myMeta.style.display = 'none';
-    if(myChildren) {
-      myChildren.style.display = 'none';
-    }
-  }
-  else {
-    this.textContent = '[-]';
-    myComment.style.opacity = '1';
-    myBody.style.display = 'block';
-    myMeta.style.display = 'block';
-    if(myChildren) {
-      myChildren.style.display = 'block';
-    }
-  }
-  //myComment.scrollIntoView(true);
-  return false;
-}
-
-
-function makeAltHide() {
-  var comments = document.querySelectorAll('div.commentholder');
-
-  for(var i=0; i<comments.length; ++i) {
-    var hideLink = document.createElement('a');
-    hideLink.href = '#';
-    hideLink.className = 'comment-edit-link';
-    hideLink.style.float = 'right';
-    hideLink.style.textDecoration = 'none';
-    hideLink.title = 'Show/hide';
-    hideLink.textContent = '[-]';
-
-    hideLink.addEventListener('click', altCommentToggle, false);
-
-    comments[i].insertBefore(hideLink, comments[i].firstChild);
-  }
-}
-
-
-
-
-// Run iff we're on a page which looks like a post
-if(location.pathname.substring(0, 3) == '/20') {
+// Run on pages with comments
+if (document.querySelector('#comments')) {
   makeHighlight();
   makeShowHideNewTextParentLinks();
 }
@@ -364,9 +321,9 @@ function boustrophedon(justChars, context) {
     lineHeight = parseInt(lineHeight.substring(0, lineHeight.length-2));
     var height = compStyle.height;
     height = parseInt(height.substring(0, height.length-2));
-  
+
     var lines = height / lineHeight;
-  
+
     var backbase = ele.cloneNode(true);
     backbase.style.position = 'absolute';
     backbase.style.top = '0px';
@@ -381,7 +338,7 @@ function boustrophedon(justChars, context) {
     }
     backbase.style.background = 'white';
 
-  
+
     for(var i=1; i<lines; i+=2) {
       var copy = backbase.cloneNode(true);
       copy.style.clip = 'rect(' + i*lineHeight + 'px, auto, ' + (i+1)*lineHeight + 'px, auto)';
