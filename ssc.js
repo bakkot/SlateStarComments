@@ -3,7 +3,7 @@
 
 
 // Global variables are fun!
-var commentCountText, commentsList, divDiv;
+var commentCountText, commentsList, divDiv, isReload;
 
 
 
@@ -244,7 +244,7 @@ function makeHighlight() {
   if (isNaN(lastVisit)) {
     lastVisit = 0; // prehistory! Actually 1970, which predates all SSC comments, so we're good.
   }
-  if (document.referrer !== location.href.split('#')[0]) { // if they are equal we almost certainly arrived here from a reply or opening a comment in a tab, and probably don't want it to reset.
+  if (isReload || document.referrer !== location.href.split('#')[0]) { // if they are equal we almost certainly arrived here from a reply or opening a comment in a tab, and probably don't want it to reset.
     dateInput.value = time_toHuman(lastVisit);
     var mostRecent = border(lastVisit, false);
     localStorage[pathString] = mostRecent;
@@ -260,6 +260,20 @@ function makeHighlight() {
     localStorage[pathString] = mostRecent;
   }
 }
+
+// This logic helps determine if the page was reloaded (approximately).
+addEventListener('unload', function(){
+  sessionStorage.setItem('last-unload', (new Date()).getTime());
+});
+
+(function(){
+  var lastUnload = parseInt(sessionStorage.getItem('last-unload'));
+  if (isNaN(lastUnload)) {
+    lastUnload = 0;
+  }
+  isReload = (new Date()).getTime() - lastUnload < 7000;
+}());
+
 
 
 function makeShowHideNewTextParentLinks() {
@@ -373,3 +387,4 @@ for(var i = 0; i < posts.length; ++i) {
     boustrophedon(false, posts[i]);
   }
 }
+
