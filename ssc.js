@@ -3,7 +3,7 @@
 
 
 // Global variables are fun!
-var commentCountText, commentsList, divDiv, isReload;
+var commentCountText, commentsList, divDiv, isReply, commentCausedUnload = false;
 
 
 
@@ -244,7 +244,7 @@ function makeHighlight() {
   if (isNaN(lastVisit)) {
     lastVisit = 0; // prehistory! Actually 1970, which predates all SSC comments, so we're good.
   }
-  if (isReload || document.referrer !== location.href.split('#')[0]) { // if they are equal we almost certainly arrived here from a reply or opening a comment in a tab, and probably don't want it to reset.
+  if (!isReply) {
     dateInput.value = time_toHuman(lastVisit);
     var mostRecent = border(lastVisit, false);
     localStorage[pathString] = mostRecent;
@@ -261,17 +261,27 @@ function makeHighlight() {
   }
 }
 
-// This logic helps determine if the page was reloaded (approximately).
-addEventListener('unload', function(){
-  sessionStorage.setItem('last-unload', (new Date()).getTime());
-});
-
+// This logic helps determine if the page was loaded by posting a comment (approximately)
 (function(){
-  var lastUnload = parseInt(sessionStorage.getItem('last-unload'));
-  if (isNaN(lastUnload)) {
-    lastUnload = 0;
+  var forms = document.querySelectorAll('.comment-form');
+  for (var i = 0; i < forms.length; ++i) {
+    forms[i].addEventListener('submit', function(){
+      sessionStorage.setItem('last-submit', (new Date()).getTime());
+      commentCausedUnload = true;
+    });
   }
-  isReload = (new Date()).getTime() - lastUnload < 7000;
+
+  addEventListener('unload', function(){
+    if (!commentCausedUnload) {
+      sessionStorage.removeItem('last-submit');
+    }
+  });
+
+  var lastSubmit = parseInt(sessionStorage.getItem('last-submit'));
+  if (isNaN(lastSubmit)) {
+    lastSubmit = 0;
+  }
+  isReply = (new Date()).getTime() - lastSubmit < 1200000;
 }());
 
 
