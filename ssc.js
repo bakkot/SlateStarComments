@@ -1,5 +1,5 @@
 // run to reset:
-// localStorage.removeItem('visited-' + location.pathname);
+// localStorage.removeItem('visited-' + location.pathname); localStorage.removeItem('prev-' + location.pathname);
 
 
 // Global variables are fun!
@@ -238,14 +238,27 @@ function makeHighlight() {
 
   // *** Retrieve the last-visit time from storage, border all comments made after, and save the time of the latest comment in storage for next time
 
+  var prevString = 'prev-' + location.pathname;
   var pathString = 'visited-' + location.pathname;
   var lastVisit = parseInt(localStorage[pathString]);
   if (isNaN(lastVisit)) {
     lastVisit = 0; // prehistory! Actually 1970, which predates all SSC comments, so we're good.
   }
-  dateInput.value = time_toHuman(lastVisit);
-  var mostRecent = border(lastVisit, false);
-  localStorage[pathString] = mostRecent;
+  if (document.referrer !== location.href.split('#')[0]) { // if they are equal we almost certainly arrived here from a reply or opening a comment in a tab, and probably don't want it to reset.
+    dateInput.value = time_toHuman(lastVisit);
+    var mostRecent = border(lastVisit, false);
+    localStorage[pathString] = mostRecent;
+    localStorage[prevString] = lastVisit;
+  } else {
+    // Use the same threshold we used last time and leave that as is, but update the threshold to be used on fresh page loads.
+    var prevVisit = parseInt(localStorage[prevString]);
+    if (isNaN(prevVisit)) {
+      prevVisit = lastVisit;
+    }
+    dateInput.value = time_toHuman(prevVisit);
+    var mostRecent = border(prevVisit, false);
+    localStorage[pathString] = mostRecent;
+  }
 }
 
 
