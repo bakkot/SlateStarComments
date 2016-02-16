@@ -1,5 +1,5 @@
 // run to reset:
-// localStorage.removeItem('visited-' + location.pathname); localStorage.removeItem('prev-' + location.pathname);
+// localStorage.removeItem('visited-' + location.pathname); sessionStorage.removeItem('prev-' + location.pathname);
 
 
 // Global variables are fun!
@@ -238,7 +238,6 @@ function makeHighlight() {
 
   // *** Retrieve the last-visit time from storage, border all comments made after, and save the time of the latest comment in storage for next time
 
-  var prevString = 'prev-' + location.pathname;
   var pathString = 'visited-' + location.pathname;
   var lastVisit = parseInt(localStorage[pathString]);
   if (isNaN(lastVisit)) {
@@ -248,10 +247,9 @@ function makeHighlight() {
     dateInput.value = time_toHuman(lastVisit);
     var mostRecent = border(lastVisit, false);
     localStorage[pathString] = mostRecent;
-    localStorage[prevString] = lastVisit;
   } else {
     // Use the same threshold we used last time and leave that as is, but update the threshold to be used on fresh page loads.
-    var prevVisit = parseInt(localStorage[prevString]);
+    var prevVisit = parseInt(sessionStorage['prev-' + location.pathname]);
     if (isNaN(prevVisit)) {
       prevVisit = lastVisit;
     }
@@ -267,6 +265,7 @@ function makeHighlight() {
   for (var i = 0; i < forms.length; ++i) {
     forms[i].addEventListener('submit', function(){
       sessionStorage.setItem('last-submit', (new Date()).getTime());
+      sessionStorage.setItem('prev-' + location.pathname, time_fromHuman(document.querySelector('.date-input').value));
       commentCausedUnload = true;
     });
   }
@@ -274,6 +273,7 @@ function makeHighlight() {
   addEventListener('unload', function(){
     if (!commentCausedUnload) {
       sessionStorage.removeItem('last-submit');
+      sessionStorage.removeItem('prev-' + location.pathname);
     }
   });
 
