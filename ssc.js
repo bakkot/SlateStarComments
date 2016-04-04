@@ -398,3 +398,56 @@ for(var i = 0; i < posts.length; ++i) {
   }
 }
 
+
+
+
+// *** Add clickable markup buttons to comment forms
+
+function tag(ele, label) {
+  var l = label.length;
+  return function() {
+    var start = ele.selectionStart;
+    var end = ele.selectionEnd;
+    if (ele.value.slice(start-2-l, start) === '<' + label + '>' && ele.value.slice(end, end+3+l) === '</' + label + '>') {
+      ele.value = ele.value.slice(0, start-2-l) + ele.value.slice(start, end) + ele.value.slice(end+3+l);
+      ele.setSelectionRange(start-2-l, end-2-l);
+    } else {
+      ele.value = ele.value.slice(0, start) + '<' + label + '>' + ele.value.slice(start, end) + '</' + label + '>' + ele.value.slice(end);
+      ele.setSelectionRange(start+2+l, end+2+l);
+    }
+  };
+}
+
+var buttons = [
+  { name: 'Italic', fn: function(ele){ return tag(ele, 'i') } },
+  { name: 'Bold', fn: function(ele){ return tag(ele, 'b') } },
+  { name: 'Link', fn: function(ele){ return function() {
+    var start = ele.selectionStart;
+    var end = ele.selectionEnd;
+    var offset = 0;
+    var url = prompt('To where?');
+    if (url !== null) {
+      if (url.match('"')) url = encodeURI(url);
+      ele.value = ele.value.slice(0, start) + '<a href="' + url + '">' + ele.value.slice(start, end) + '</a>' + ele.value.slice(end);
+      offset = 11 + url.length;
+    }
+    ele.setSelectionRange(start+offset, end+offset);
+  }; } },
+  { name: 'Quote', fn: function(ele){ return tag(ele, 'blockquote') } },
+  { name: 'Code', fn: function(ele){ return tag(ele, 'code') } },
+  { name: 'Strike', fn: function(ele){ return tag(ele, 'strike') } },
+]
+
+var rs = document.querySelectorAll('.comment-form-comment');
+for (var i = 0; i < rs.length; ++i) { // i.e. 0, 1, but whatever
+  var r = rs[i];
+  for (var j = 0; j < buttons.length; ++j) {
+    var button = document.createElement('input');
+    button.type = 'button';
+    button.value = buttons[j].name;
+    button.style.width = 'auto';
+    button.style.marginRight = '.4em';
+    button.addEventListener('click', buttons[j].fn(r.querySelector('textarea')));
+    r.appendChild(button);
+  } 
+}
