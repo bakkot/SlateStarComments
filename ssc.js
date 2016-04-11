@@ -447,6 +447,7 @@ for (var i = 0; i < rs.length; ++i) { // i.e. 0, 1, but whatever
     button.value = buttons[j].name;
     button.style.width = 'auto';
     button.style.marginRight = '.4em';
+    button.tabIndex = -1;
     button.addEventListener('click', buttons[j].fn(r.querySelector('textarea')));
     r.appendChild(button);
   } 
