@@ -1,0 +1,17 @@
+{
+  "name": "SSC Block",
+  "short_name": "SSCBlock",
+  "version": "1.0.1",
+  "description": "Block users in SlateStarCodex comments.",
+  "content_scripts": [
+    {
+      "matches": ["http://slatestarcodex.com/20*"],
+      "js": ["block.user.js"]
+    }
+  ],
+  "icons": {
+    "48": "icon48.png",
+    "128": "icon128.png"
+  },
+  "manifest_version": 2
+}

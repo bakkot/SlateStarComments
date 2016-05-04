@@ -1,0 +1,3 @@
+# SSC Block
+
+The comments sections over at SlateStarCodex.com often run long, but not everyone is going to be discussing things you care about. This [Chrome extension](https://chrome.google.com/webstore/detail/ssc-block/omoblondlbpljpjpegjknicfhoicjfnk) / [userscript](https://github.com/OpenUserJs/OpenUserJS.org/wiki/Greasemonkey-for-Firefox) adds a feature: click on a user's avatar to hide their comments now and on all other threads. Their comments will be collapsed as if you'd clicked 'hide', including hiding all child comments.
