@@ -1,11 +1,11 @@
 {
   "name": "SSC Block",
   "short_name": "SSCBlock",
-  "version": "1.0.1",
-  "description": "Block users in SlateStarCodex comments.",
+  "version": "1.0.2",
+  "description": "Block users in SlateStarCodex and Unsong comments.",
   "content_scripts": [
     {
-      "matches": ["http://slatestarcodex.com/20*"],
+      "matches": ["http://slatestarcodex.com/20*", "http://unsongbook.com/*"],
       "js": ["block.user.js"]
     }
   ],

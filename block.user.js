@@ -1,9 +1,10 @@
 // ==UserScript==
 // @name           SSC Block
 // @namespace      https://github.com/bakkot/SlateStarComments/tree/blocking
-// @description    Block users in SlateStarCodex comments
+// @description    Block users in SlateStarCodex and Unsong comments
 // @match          http://slatestarcodex.com/20*
-// @version        1.0.1
+// @match          http://unsongbook.com/*
+// @version        1.0.2
 // ==/UserScript==
 
 // run to reset:
