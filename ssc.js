@@ -2,6 +2,18 @@
 // localStorage.removeItem('visited-' + location.pathname); sessionStorage.removeItem('prev-' + location.pathname);
 
 
+// redirect http://slatestarcodex.com/tag/open/?latest (and similar) to their first post
+if (location.pathname.match(/^\/tag\/[^\/]+\//) && location.search === '?latest') {
+  var rHref = document.querySelector('h2.pjgm-posttitle > a').href;
+  if (rHref) {
+    location = rHref;
+  }
+}
+
+
+
+
+
 // Global variables are fun!
 var commentCountText, commentsList, divDiv, isReply, commentCausedUnload = false;
 
