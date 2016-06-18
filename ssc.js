@@ -450,9 +450,9 @@ var buttons = [
   { name: 'Strike', fn: function(ele){ return tag(ele, 'strike') } },
 ]
 
-var rs = document.querySelectorAll('.comment-form-comment');
-for (var i = 0; i < rs.length; ++i) { // i.e. 0, 1, but whatever
-  var r = rs[i];
+var rs = document.querySelectorAll('.comment-form-comment, .sce-comment-textarea');
+for (var i = 0; i < rs.length; ++i) {
+  var r = rs[i].appendChild(document.createElement('p'));
   for (var j = 0; j < buttons.length; ++j) {
     var button = document.createElement('input');
     button.type = 'button';
@@ -460,7 +460,7 @@ for (var i = 0; i < rs.length; ++i) { // i.e. 0, 1, but whatever
     button.style.width = 'auto';
     button.style.marginRight = '.4em';
     button.tabIndex = -1;
-    button.addEventListener('click', buttons[j].fn(r.querySelector('textarea')));
+    button.addEventListener('click', buttons[j].fn(r.parentElement.querySelector('textarea')));
     r.appendChild(button);
   } 
 }
