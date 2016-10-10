@@ -145,7 +145,7 @@ function makeHighlight() {
   styleEle.textContent = '.new-comment { border: 2px solid #5a5; }' +
   '.new-text { color: #C5C5C5; display: none; }' +
   '.new-comment .new-text { display: inline; }' +
-  '.comments-floater { position: fixed; right: 4px; top: 4px; padding: 2px 5px; font-size: 14px; border-radius: 5px; background: rgba(250, 250, 250, 0.90); }' +
+  '.comments-floater { position: fixed; right: 4px; top: ' + (document.getElementById('wpadminbar') ? '36' : '4') + 'px; padding: 2px 5px; font-size: 14px; border-radius: 5px; background: rgba(250, 250, 250, 0.90); }' +
   // available space on the right = right bar (230px) + page margin ((screen.width - #pjgm-wrap.width) / 2)
   '                             .comments-floater { max-width: calc(230px + (100% - 1258px) / 2); }' +
   '@media (max-width: 1274px) { .comments-floater { max-width: calc(230px + (100% - 1195px) / 2); } }' +
