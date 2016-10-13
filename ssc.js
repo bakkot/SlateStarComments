@@ -464,3 +464,5 @@ for (var i = 0; i < rs.length; ++i) {
     r.appendChild(button);
   } 
 }
+
+if(location.host==='unsongbook.com'){(function(){var n,walk=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT,null,false);while(n=walk.nextNode())n.textContent=n.textContent.replace(/Berenst(a|e)in/g,function(m){return Math.random()<.1?m:(Math.random()<.5?'Berenstain':'Berenstein');}).replace(/BERENST(A|E)IN/g,function(m){return Math.random()<.1?m:(Math.random()<.5?'BERENSTAIN':'BERENSTEIN');});}());}
