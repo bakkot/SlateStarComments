@@ -15,7 +15,7 @@ if (location.pathname.match(/^\/tag\/[^\/]+\//) && location.search === '?latest'
 
 
 // Global variables are fun!
-var commentCountText, commentsList, divDiv, isReply, commentCausedUnload = false;
+var commentCountText, commentsList, divDiv, isReply;
 
 
 
@@ -272,18 +272,26 @@ function makeHighlight() {
 }
 
 // This logic helps determine if the page was loaded by posting a comment (approximately)
-(function(){
+function addUnloadListeners() {
+  var commentOrLoginCausedUnload = false;
+  var navListener = function(){
+    sessionStorage.setItem('last-submit', (new Date()).getTime());
+    sessionStorage.setItem('prev-' + location.pathname, time_fromHuman(document.querySelector('.date-input').value));
+    commentOrLoginCausedUnload = true;
+  }
+
   var forms = document.querySelectorAll('.comment-form');
   for (var i = 0; i < forms.length; ++i) {
-    forms[i].addEventListener('submit', function(){
-      sessionStorage.setItem('last-submit', (new Date()).getTime());
-      sessionStorage.setItem('prev-' + location.pathname, time_fromHuman(document.querySelector('.date-input').value));
-      commentCausedUnload = true;
-    });
+    forms[i].addEventListener('submit', navListener);
+  }
+
+  var loginLinks = document.querySelectorAll('.comment-reply-login,.must-log-in>a,.logged-in-as>a:nth-child(2)');
+  for (var i = 0; i < loginLinks.length; ++i) {
+    loginLinks[i].addEventListener('click', navListener);
   }
 
   addEventListener('unload', function(){
-    if (!commentCausedUnload) {
+    if (!commentOrLoginCausedUnload) {
       sessionStorage.removeItem('last-submit');
       sessionStorage.removeItem('prev-' + location.pathname);
     }
@@ -294,7 +302,7 @@ function makeHighlight() {
     lastSubmit = 0;
   }
   isReply = (new Date()).getTime() - lastSubmit < 1200000;
-}());
+}
 
 
 
@@ -351,6 +359,7 @@ function makeShowHideNewTextParentLinks() {
 
 // Run on pages with comments
 if (document.querySelector('#comments')) {
+  addUnloadListeners();
   makeHighlight();
   makeShowHideNewTextParentLinks();
 }
