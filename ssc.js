@@ -269,6 +269,8 @@ function makeHighlight() {
     var mostRecent = border(prevVisit, false);
     localStorage[pathString] = mostRecent;
   }
+  sessionStorage.removeItem('last-submit');
+  sessionStorage.removeItem('prev-' + location.pathname);
 }
 
 // This logic helps determine if the page was loaded by posting a comment (approximately)
