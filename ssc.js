@@ -438,6 +438,7 @@ function tag(ele, label) {
       ele.value = ele.value.slice(0, start) + '<' + label + '>' + ele.value.slice(start, end) + '</' + label + '>' + ele.value.slice(end);
       ele.setSelectionRange(start+2+l, end+2+l);
     }
+    ele.focus();
   };
 }
 
@@ -451,10 +452,16 @@ var buttons = [
     var url = prompt('To where?');
     if (url !== null) {
       if (url.match('"')) url = encodeURI(url);
-      ele.value = ele.value.slice(0, start) + '<a href="' + url + '">' + ele.value.slice(start, end) + '</a>' + ele.value.slice(end);
+      var text = ele.value.slice(start, end);
+      if (start === end) {
+        text = 'link text';
+        end += text.length;
+      }
+      ele.value = ele.value.slice(0, start) + '<a href="' + url + '">' + text + '</a>' + ele.value.slice(end);
       offset = 11 + url.length;
+      ele.setSelectionRange(start + offset, end + offset);
+      ele.focus();
     }
-    ele.setSelectionRange(start+offset, end+offset);
   }; } },
   { name: 'Quote', fn: function(ele){ return tag(ele, 'blockquote') } },
   { name: 'Code', fn: function(ele){ return tag(ele, 'code') } },
