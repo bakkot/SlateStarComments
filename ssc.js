@@ -479,3 +479,212 @@ for (var i = 0; i < rs.length; ++i) {
 }
 
 if(location.host==='unsongbook.com'){(function(){var n,walk=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT,null,false);while(n=walk.nextNode())n.textContent=n.textContent.replace(/Berenst(a|e)in/g,function(m){return Math.random()<.1?m:(Math.random()<.5?'Berenstain':'Berenstein');}).replace(/BERENST(A|E)IN/g,function(m){return Math.random()<.1?m:(Math.random()<.5?'BERENSTAIN':'BERENSTEIN');});}());}
+
+
+
+// Default comment expansion options
+
+function makeExpandOptions() {
+  // TODO deal with links to comments
+
+  function showActive() {
+    var comments = document.querySelectorAll('li.comment');
+    var holders = [];
+
+    for (var i = 0; i < comments.length; ++i) {
+      var comment = comments[i];
+      var commentHolder = comment.querySelector('div.commentholder');
+      holders.push(commentHolder);
+      comment.shouldShow = false; // relies on parents being visited before children
+
+      if (commentHolder.classList.contains('new-comment')) {
+        var toMark = comment;
+        toMark.shouldShow = true;
+        while (toMark.parentElement.tagName === 'UL') {
+          toMark = toMark.parentElement.parentElement;
+          if (toMark.shouldShow) break;
+          toMark.shouldShow = true; // the top-most comment has parent != UL, but still mark it
+        }
+      }
+
+      var link = comment.querySelector('.comment-hide-link');
+      if (link.textContent === 'Show') {
+        commentToggle.call(link, null, true);
+      }
+    }
+
+    for (var i = 0; i < comments.length; ++i) {
+      var comment = comments[i];
+      var commentHolder = holders[i];
+
+      if (comment.shouldShow || comment.querySelector('div.comment-body').offsetParent === null) {
+        continue;
+      }
+
+      if (!commentHolder.classList.contains('new-comment')) {
+        var toHide = comment;
+        while (toHide.parentElement.tagName === 'UL' && !toHide.parentElement.parentElement.shouldShow) {
+          toHide = toHide.parentElement.parentElement;
+        }
+        var link = toHide.querySelector('.comment-hide-link');
+        commentToggle.call(link, null, true);
+      }
+    }
+  }
+
+
+  function showNone() {
+    var topComments = document.querySelectorAll('.commentlist > .comment');
+    for (var i = 0; i < topComments.length; ++i) {
+      var link = topComments[i].querySelector('.comment-hide-link');
+      if (link.textContent === 'Show') continue;
+      commentToggle.call(link, null, true);
+    }
+  }
+
+
+  function showAll() {
+    var comments = document.querySelectorAll('li.comment');
+    var holders = [];
+
+    for (var i = 0; i < comments.length; ++i) {
+      var link = comments[i].querySelector('.comment-hide-link');
+      if (link.textContent === 'Hide') continue;
+      commentToggle.call(link, null, true);
+    }
+  }
+
+
+
+  var styleEle = document.createElement('style'); // TODO inline this in main script
+  styleEle.type = 'text/css';
+  styleEle.textContent = '' +
+  '.expand-links { font-size: 14px; padding-bottom: 10px; }' +
+  '.expand-links span { padding-right: 10px }';
+  document.head.appendChild(styleEle);
+
+  var expandPreference = localStorage.expandPreference;
+  if (expandPreference !== 'all' && expandPreference !== 'active' && expandPreference !== 'none') {
+    expandPreference = localStorage.expandPreference = 'all';
+  }
+
+  var newDiv = document.createElement('div');
+  newDiv.className = 'expand-links';
+  newDiv.innerHTML = 'Expand (default): ';
+
+  var allSpan = document.createElement('span')
+  var allLink = document.createElement('a');
+  allLink.innerHTML = 'All';
+  allLink.style.textDecoration = 'underline';
+  allLink.style.cursor = 'pointer';
+  allLink.addEventListener('click', function(e) {
+    showAll();
+  });
+
+  var allRadio = document.createElement('input');
+  allRadio.type = 'radio';
+  allRadio.name = 'expand-radio';
+  allRadio.value = 'all-radio';
+  allRadio.checked = expandPreference === 'all';
+  allRadio.addEventListener('click', function(){
+    localStorage.expandPreference = 'all';
+  });
+
+  allSpan.appendChild(allLink);
+  allSpan.appendChild(document.createTextNode(' ('));
+  allSpan.appendChild(allRadio);
+  allSpan.appendChild(document.createTextNode(')'));
+
+  newDiv.appendChild(allSpan);
+
+
+  var activeSpan = document.createElement('span')
+  var activeLink = document.createElement('a');
+  activeLink.innerHTML = 'Active';
+  activeLink.style.textDecoration = 'underline';
+  activeLink.style.cursor = 'pointer';
+  activeLink.addEventListener('click', function(e) {
+    showActive();
+  });
+
+  var activeRadio = document.createElement('input');
+  activeRadio.type = 'radio';
+  activeRadio.name = 'expand-radio';
+  activeRadio.value = 'active-radio';
+  activeRadio.checked = expandPreference === 'active';
+  activeRadio.addEventListener('click', function(){
+    localStorage.expandPreference = 'active';
+  });
+
+  activeSpan.appendChild(activeLink);
+  activeSpan.appendChild(document.createTextNode(' ('));
+  activeSpan.appendChild(activeRadio);
+  activeSpan.appendChild(document.createTextNode(')'));
+
+  newDiv.appendChild(activeSpan);
+
+
+  var noneSpan = document.createElement('span')
+  var noneLink = document.createElement('a');
+  noneLink.innerHTML = 'None';
+  noneLink.style.textDecoration = 'underline';
+  noneLink.style.cursor = 'pointer';
+  noneLink.addEventListener('click', function(e) {
+    showNone();
+  });
+
+  var noneRadio = document.createElement('input');
+  noneRadio.type = 'radio';
+  noneRadio.name = 'expand-radio';
+  noneRadio.value = 'none-radio';
+  noneRadio.checked = expandPreference === 'none';
+  noneRadio.addEventListener('click', function(){
+    localStorage.expandPreference = 'none';
+  });
+
+  noneSpan.appendChild(noneLink);
+  noneSpan.appendChild(document.createTextNode(' ('));
+  noneSpan.appendChild(noneRadio);
+  noneSpan.appendChild(document.createTextNode(')'));
+
+  newDiv.appendChild(noneSpan);
+
+
+  var list = document.querySelector('.commentlist');
+  list.parentElement.insertBefore(newDiv, list);
+
+  // Totally unnecessary, but what the hell.
+  window.addEventListener('storage', function(e) {
+    if (e.key !== 'expandPreference') return;
+    switch (e.newValue) {
+      case 'all':
+        allRadio.checked = true;
+        break;
+      case 'active':
+        activeRadio.checked = true;
+        break;
+      case 'none':
+        noneRadio.checked = true;
+        break;
+    }
+  });
+
+  if (expandPreference === 'active') {
+    showActive();
+  } else if (expandPreference === 'none') {
+    showNone();
+  }
+}
+
+
+if (location.search.match(/test-expand=true/)) {
+  alert('Opted in to testing expand options');
+  localStorage.testExpand = true;
+} else if (location.search.match(/test-expand=false/)) {
+  alert('Opted out of testing expand options');
+  localStorage.testExpand = false;
+}
+
+if (localStorage.testExpand && document.querySelector('#comments')) {
+  makeExpandOptions();
+}
