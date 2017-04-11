@@ -679,12 +679,12 @@ function makeExpandOptions() {
 
 if (location.search.match(/test-expand=true/)) {
   alert('Opted in to testing expand options');
-  localStorage.testExpand = true;
+  localStorage.testExpand = 'true';
 } else if (location.search.match(/test-expand=false/)) {
   alert('Opted out of testing expand options');
-  localStorage.testExpand = false;
+  localStorage.testExpand = 'false';
 }
 
-if (localStorage.testExpand && document.querySelector('#comments')) {
+if (localStorage.testExpand === 'true' && document.querySelector('#comments')) {
   makeExpandOptions();
 }
