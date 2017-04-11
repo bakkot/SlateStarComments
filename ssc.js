@@ -105,7 +105,7 @@ function border(since, updateTitle) {
 
 // *** Toggles visibility of comment which invoked it
 
-function commentToggle() {
+function commentToggle(e, dontScroll) {
   var myComment = this.parentElement.parentElement;
   var myBody = myComment.querySelector('div.comment-body');
   var myMeta = myComment.querySelector('div.comment-meta');
@@ -118,6 +118,7 @@ function commentToggle() {
     if (myChildren) {
       myChildren.style.display = 'none';
     }
+    if (!dontScroll) myComment.scrollIntoView(true); // It's debatable if we should do this at all, but doing it only when hiding is probably better than doing it unconditionally.
   } else {
     this.textContent = 'Hide';
     myComment.style.opacity = '1';
@@ -127,7 +128,6 @@ function commentToggle() {
       myChildren.style.display = 'block';
     }
   }
-  myComment.scrollIntoView(true);
 }
 
 
