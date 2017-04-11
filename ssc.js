@@ -313,11 +313,10 @@ function makeShowHideNewTextParentLinks() {
 
   for (var i=0; i < comments.length; ++i) {
     var commentHolder = comments[i].querySelector('div.commentholder');
-    comments[i].holder = commentHolder;
 
     // Show/Hide
     var hideLink = document.createElement('a');
-    hideLink.className = 'comment-reply-link';
+    hideLink.className = 'comment-reply-link comment-hide-link';
     hideLink.style.textDecoration = 'underline';
     hideLink.style.cursor = 'pointer';
     hideLink.textContent = 'Hide';
@@ -328,8 +327,6 @@ function makeShowHideNewTextParentLinks() {
     var replyEle = divs[divs.length-1];
 
     replyEle.appendChild(hideLink);
-
-    comments[i].hideLink = hideLink;
 
     // ~new~
     var newText = document.createElement('span');
