@@ -31,8 +31,7 @@ function time_fromHuman(string) {
     // browsers handle ISO 8601 without explicit timezone differently
     // thus, we have to fix that by hand
     time += (new Date()).getTimezoneOffset() * 60e3;
-  }
-  else {
+  } else {
     string = string.replace(' at', '');
     time = Date.parse(string);  // milliseconds since epoch
   }
@@ -64,7 +63,7 @@ function border(since, updateTitle) {
   var newComments = [];
 
   // Walk comments, setting borders as appropriate and saving new comments in a list
-  for(var i = 0; i < commentList.length; ++i) {
+  for (var i = 0; i < commentList.length; ++i) {
     var postTime = time_fromHuman(commentList[i].querySelector('.comment-meta a').textContent);
     if (postTime > since) {
       commentList[i].classList.add('new-comment');
@@ -72,8 +71,7 @@ function border(since, updateTitle) {
       if (postTime > mostRecent) {
         mostRecent = postTime;
       }
-    }
-    else {
+    } else {
       commentList[i].classList.remove('new-comment');
     }
   }
@@ -90,7 +88,7 @@ function border(since, updateTitle) {
   if (newCount > 0 ) {
     divDiv.style.display = 'block';
     newComments.sort(function(a, b){return a.time - b.time;});
-    for(i = 0; i < newCount; ++i) {
+    for (i = 0; i < newCount; ++i) {
       var ele = newComments[i].ele;
       var newLi = document.createElement('li');
       newLi.innerHTML = ele.querySelector('cite').textContent + ' <span class="comments-date">' + time_toHuman(newComments[i].time) + '</span>';
@@ -98,8 +96,7 @@ function border(since, updateTitle) {
       newLi.addEventListener('click', function(ele){return function(){ele.scrollIntoView(true);};}(ele));
       commentsList.appendChild(newLi);
     }
-  }
-  else {
+  } else {
     divDiv.style.display = 'none';
   }
   return mostRecent;
@@ -113,21 +110,20 @@ function commentToggle() {
   var myBody = myComment.querySelector('div.comment-body');
   var myMeta = myComment.querySelector('div.comment-meta');
   var myChildren = myComment.nextElementSibling;
-  if(this.textContent == 'Hide') {
+  if (this.textContent == 'Hide') {
     this.textContent = 'Show';
     myComment.style.opacity = '.6';
     myBody.style.display = 'none';
     myMeta.style.display = 'none';
-    if(myChildren) {
+    if (myChildren) {
       myChildren.style.display = 'none';
     }
-  }
-  else {
+  } else {
     this.textContent = 'Hide';
     myComment.style.opacity = '1';
     myBody.style.display = 'block';
     myMeta.style.display = 'block';
-    if(myChildren) {
+    if (myChildren) {
       myChildren.style.display = 'block';
     }
   }
@@ -315,8 +311,9 @@ function makeShowHideNewTextParentLinks() {
 
   var comments = document.querySelectorAll('li.comment');
 
-  for(var i=0; i<comments.length; ++i) {
+  for (var i=0; i < comments.length; ++i) {
     var commentHolder = comments[i].querySelector('div.commentholder');
+    comments[i].holder = commentHolder;
 
     // Show/Hide
     var hideLink = document.createElement('a');
@@ -332,6 +329,8 @@ function makeShowHideNewTextParentLinks() {
 
     replyEle.appendChild(hideLink);
 
+    comments[i].hideLink = hideLink;
+
     // ~new~
     var newText = document.createElement('span');
     newText.className = 'new-text';
@@ -341,7 +340,7 @@ function makeShowHideNewTextParentLinks() {
     meta.appendChild(newText);
 
     // Parent link
-    if(comments[i].parentElement.tagName === 'UL') {
+    if (comments[i].parentElement.tagName === 'UL') {
       var parent = comments[i].parentElement.parentElement;
       var parentID = parent.firstElementChild.id;
 
@@ -388,18 +387,17 @@ function boustrophedon(justChars, context) {
     backbase.style.position = 'absolute';
     backbase.style.top = '0px';
     backbase.style.left = '0px';
-    if(justChars) {
+    if (justChars) {
       backbase.style.unicodeBidi = 'bidi-override';
       backbase.style.direction = 'rtl';
-    }
-    else {
+    } else {
       backbase.style.transform = 'scale(-1, 1)';
       backbase.style['-webkit-transform'] = 'scale(-1, 1)';
     }
     backbase.style.background = 'white';
 
 
-    for(var i=1; i<lines; i+=2) {
+    for (var i = 1; i < lines; i+=2) {
       var copy = backbase.cloneNode(true);
       copy.style.clip = 'rect(' + i*lineHeight + 'px, auto, ' + (i+1)*lineHeight + 'px, auto)';
       ele.appendChild(copy);
@@ -407,7 +405,7 @@ function boustrophedon(justChars, context) {
   }
 
   var ps = context.querySelectorAll('div.pjgm-postcontent > p');
-  for(var i=0; i<ps.length; ++i) {
+  for (var i = 0; i < ps.length; ++i) {
     mangle(ps[i]);
   }
 }
@@ -415,8 +413,8 @@ function boustrophedon(justChars, context) {
 
 
 var posts = document.querySelectorAll('div.post');
-for(var i = 0; i < posts.length; ++i) {
-  if(posts[i].querySelector('span#boustrophedon')) {
+for (var i = 0; i < posts.length; ++i) {
+  if (posts[i].querySelector('span#boustrophedon')) {
     boustrophedon(false, posts[i]);
   }
 }
