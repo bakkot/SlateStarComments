@@ -10,6 +10,14 @@ if (location.search.match(/test-expand=true/)) {
   localStorage.testExpand = 'false';
 }
 
+if (location.search.match(/test-preview=true/)) {
+  alert('Opted in to testing hidden comment snippets');
+  localStorage.testPreview = 'true';
+} else if (location.search.match(/test-preview=false/)) {
+  alert('Opted out of testing hidden comment snippets');
+  localStorage.testPreview = 'false';
+}
+
 
 // redirect http://slatestarcodex.com/tag/open/?latest (and similar) to their first post
 if (location.pathname.match(/^\/tag\/[^\/]+\//) && location.search === '?latest') {
@@ -112,7 +120,7 @@ function border(since, updateTitle) {
 
 // *** Toggles visibility of comment which invoked it
 
-function commentToggle(e, dontScroll) {
+var commentToggle = function commentToggle(e, dontScroll) {
   var myComment = this.parentElement.parentElement;
   var myBody = myComment.querySelector('div.comment-body');
   var myMeta = myComment.querySelector('div.comment-meta');
@@ -135,6 +143,31 @@ function commentToggle(e, dontScroll) {
       myChildren.style.display = 'block';
     }
   }
+};
+
+if (localStorage.testPreview === 'true') {
+  commentToggle = function commentToggle(e, dontScroll) {
+    var myComment = this.parentElement.parentElement;
+    if (this.textContent == 'Hide') {
+      this.textContent = 'Show';
+      myComment.className += ' collapsed-comment';
+      if (!dontScroll) myComment.scrollIntoView(true); // It's debatable if we should do this at all, but doing it only when hiding is probably better than doing it unconditionally.
+    } else {
+      this.textContent = 'Hide';
+      myComment.className = myComment.className.replace(/ collapsed-comment/, '');
+    }
+  };
+  var styleEle = document.createElement('style');
+  styleEle.type = 'text/css';
+  styleEle.textContent = '' +
+  '.collapsed-comment { opacity: .6; }' +
+  '.collapsed-comment > .comment-meta { display: none; }' +
+  '.collapsed-comment > .comment-body { margin-bottom: -2em; }' +
+  '.collapsed-comment > .comment-body > p:first-of-type { white-space: nowrap;  overflow: hidden;  text-overflow: ellipsis; max-height: 24px; }' +
+  '.collapsed-comment > .comment-body > *:not(p), .collapsed-comment > .comment-body > *:not(:first-of-type) { display: none; }' +
+  '.collapsed-comment + ul { display: none; }' +
+  '';
+  document.head.appendChild(styleEle);
 }
 
 
