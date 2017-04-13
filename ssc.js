@@ -2,6 +2,15 @@
 // localStorage.removeItem('visited-' + location.pathname); sessionStorage.removeItem('prev-' + location.pathname);
 
 
+if (location.search.match(/test-expand=true/)) {
+  alert('Opted in to testing expand options');
+  localStorage.testExpand = 'true';
+} else if (location.search.match(/test-expand=false/)) {
+  alert('Opted out of testing expand options');
+  localStorage.testExpand = 'false';
+}
+
+
 // redirect http://slatestarcodex.com/tag/open/?latest (and similar) to their first post
 if (location.pathname.match(/^\/tag\/[^\/]+\//) && location.search === '?latest') {
   var rHref = document.querySelector('h2.pjgm-posttitle > a').href;
@@ -9,8 +18,6 @@ if (location.pathname.match(/^\/tag\/[^\/]+\//) && location.search === '?latest'
     location = rHref;
   }
 }
-
-
 
 
 
@@ -676,14 +683,6 @@ function makeExpandOptions() {
   }
 }
 
-
-if (location.search.match(/test-expand=true/)) {
-  alert('Opted in to testing expand options');
-  localStorage.testExpand = 'true';
-} else if (location.search.match(/test-expand=false/)) {
-  alert('Opted out of testing expand options');
-  localStorage.testExpand = 'false';
-}
 
 if (localStorage.testExpand === 'true' && document.querySelector('#comments')) {
   makeExpandOptions();
