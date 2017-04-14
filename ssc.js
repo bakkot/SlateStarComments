@@ -162,7 +162,7 @@ if (localStorage.testPreview === 'true') {
   styleEle.textContent = '' +
   '.collapsed-comment { opacity: .6; }' +
   '.collapsed-comment > .comment-meta { display: none; }' +
-  '.collapsed-comment > .comment-body { margin-bottom: -2em; }' +
+  // '.collapsed-comment > .comment-body { margin-bottom: -2em; }' +
   '.collapsed-comment > .comment-body > p:first-of-type { white-space: nowrap;  overflow: hidden;  text-overflow: ellipsis; max-height: 24px; }' +
   '.collapsed-comment > .comment-body > *:not(p), .collapsed-comment > .comment-body > *:not(:first-of-type) { display: none; }' +
   '.collapsed-comment + ul { display: none; }' +
