@@ -162,9 +162,9 @@ if (localStorage.testPreview === 'true') {
   styleEle.textContent = '' +
   '.collapsed-comment { opacity: .6; }' +
   '.collapsed-comment > .comment-meta { display: none; }' +
-  // '.collapsed-comment > .comment-body { margin-bottom: -2em; }' +
-  '.collapsed-comment > .comment-body > p:first-of-type { white-space: nowrap;  overflow: hidden;  text-overflow: ellipsis; max-height: 24px; }' +
-  '.collapsed-comment > .comment-body > *:not(p), .collapsed-comment > .comment-body > *:not(:first-of-type) { display: none; }' +
+  '.collapsed-comment > .comment-body { }' +
+  '.collapsed-comment > .comment-body > * { display: none; }' +
+  '.collapsed-comment > .comment-body > p:first-of-type { display: block; white-space: nowrap;  overflow: hidden; text-overflow: ellipsis; max-height: 24px; }' +
   '.collapsed-comment + ul { display: none; }' +
   '';
   document.head.appendChild(styleEle);
@@ -395,15 +395,6 @@ function makeShowHideNewTextParentLinks() {
   }
 }
 
-// Run on pages with comments
-if (document.querySelector('#comments')) {
-  addUnloadListeners();
-  makeHighlight();
-  makeShowHideNewTextParentLinks();
-}
-
-
-
 
 
 
@@ -455,71 +446,70 @@ for (var i = 0; i < posts.length; ++i) {
     boustrophedon(false, posts[i]);
   }
 }
+if(location.host==='unsongbook.com'){(function(){var n,walk=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT,null,false);while(n=walk.nextNode())n.textContent=n.textContent.replace(/Berenst(a|e)in/g,function(m){return Math.random()<.1?m:(Math.random()<.5?'Berenstain':'Berenstein');}).replace(/BERENST(A|E)IN/g,function(m){return Math.random()<.1?m:(Math.random()<.5?'BERENSTAIN':'BERENSTEIN');});}());}
 
 
 
 
 // *** Add clickable markup buttons to comment forms
-
-function tag(ele, label) {
-  var l = label.length;
-  return function() {
-    var start = ele.selectionStart;
-    var end = ele.selectionEnd;
-    if (ele.value.slice(start-2-l, start) === '<' + label + '>' && ele.value.slice(end, end+3+l) === '</' + label + '>') {
-      ele.value = ele.value.slice(0, start-2-l) + ele.value.slice(start, end) + ele.value.slice(end+3+l);
-      ele.setSelectionRange(start-2-l, end-2-l);
-    } else {
-      ele.value = ele.value.slice(0, start) + '<' + label + '>' + ele.value.slice(start, end) + '</' + label + '>' + ele.value.slice(end);
-      ele.setSelectionRange(start+2+l, end+2+l);
-    }
-    ele.focus();
-  };
-}
-
-var buttons = [
-  { name: 'Italic', fn: function(ele){ return tag(ele, 'i') } },
-  { name: 'Bold', fn: function(ele){ return tag(ele, 'b') } },
-  { name: 'Link', fn: function(ele){ return function() {
-    var start = ele.selectionStart;
-    var end = ele.selectionEnd;
-    var offset = 0;
-    var url = prompt('To where?');
-    if (url !== null) {
-      if (url.match('"')) url = encodeURI(url);
-      var text = ele.value.slice(start, end);
-      if (start === end) {
-        text = 'link text';
-        end += text.length;
+function makeMarkupLinks() {
+  function tag(ele, label) {
+    var l = label.length;
+    return function() {
+      var start = ele.selectionStart;
+      var end = ele.selectionEnd;
+      if (ele.value.slice(start-2-l, start) === '<' + label + '>' && ele.value.slice(end, end+3+l) === '</' + label + '>') {
+        ele.value = ele.value.slice(0, start-2-l) + ele.value.slice(start, end) + ele.value.slice(end+3+l);
+        ele.setSelectionRange(start-2-l, end-2-l);
+      } else {
+        ele.value = ele.value.slice(0, start) + '<' + label + '>' + ele.value.slice(start, end) + '</' + label + '>' + ele.value.slice(end);
+        ele.setSelectionRange(start+2+l, end+2+l);
       }
-      ele.value = ele.value.slice(0, start) + '<a href="' + url + '">' + text + '</a>' + ele.value.slice(end);
-      offset = 11 + url.length;
-      ele.setSelectionRange(start + offset, end + offset);
       ele.focus();
+    };
+  }
+
+  var buttons = [
+    { name: 'Italic', fn: function(ele){ return tag(ele, 'i') } },
+    { name: 'Bold', fn: function(ele){ return tag(ele, 'b') } },
+    { name: 'Link', fn: function(ele){ return function() {
+      var start = ele.selectionStart;
+      var end = ele.selectionEnd;
+      var offset = 0;
+      var url = prompt('To where?');
+      if (url !== null) {
+        if (url.match('"')) url = encodeURI(url);
+        var text = ele.value.slice(start, end);
+        if (start === end) {
+          text = 'link text';
+          end += text.length;
+        }
+        ele.value = ele.value.slice(0, start) + '<a href="' + url + '">' + text + '</a>' + ele.value.slice(end);
+        offset = 11 + url.length;
+        ele.setSelectionRange(start + offset, end + offset);
+        ele.focus();
+      }
+    }; } },
+    { name: 'Quote', fn: function(ele){ return tag(ele, 'blockquote') } },
+    { name: 'Code', fn: function(ele){ return tag(ele, 'code') } },
+    { name: 'Strike', fn: function(ele){ return tag(ele, 'strike') } },
+  ]
+
+  var rs = document.querySelectorAll('.comment-form-comment, .sce-comment-textarea');
+  for (var i = 0; i < rs.length; ++i) {
+    var r = rs[i].appendChild(document.createElement('p'));
+    for (var j = 0; j < buttons.length; ++j) {
+      var button = document.createElement('input');
+      button.type = 'button';
+      button.value = buttons[j].name;
+      button.style.width = 'auto';
+      button.style.marginRight = '.4em';
+      button.tabIndex = -1;
+      button.addEventListener('click', buttons[j].fn(r.parentElement.querySelector('textarea')));
+      r.appendChild(button);
     }
-  }; } },
-  { name: 'Quote', fn: function(ele){ return tag(ele, 'blockquote') } },
-  { name: 'Code', fn: function(ele){ return tag(ele, 'code') } },
-  { name: 'Strike', fn: function(ele){ return tag(ele, 'strike') } },
-]
-
-var rs = document.querySelectorAll('.comment-form-comment, .sce-comment-textarea');
-for (var i = 0; i < rs.length; ++i) {
-  var r = rs[i].appendChild(document.createElement('p'));
-  for (var j = 0; j < buttons.length; ++j) {
-    var button = document.createElement('input');
-    button.type = 'button';
-    button.value = buttons[j].name;
-    button.style.width = 'auto';
-    button.style.marginRight = '.4em';
-    button.tabIndex = -1;
-    button.addEventListener('click', buttons[j].fn(r.parentElement.querySelector('textarea')));
-    r.appendChild(button);
-  } 
+  }
 }
-
-if(location.host==='unsongbook.com'){(function(){var n,walk=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT,null,false);while(n=walk.nextNode())n.textContent=n.textContent.replace(/Berenst(a|e)in/g,function(m){return Math.random()<.1?m:(Math.random()<.5?'Berenstain':'Berenstein');}).replace(/BERENST(A|E)IN/g,function(m){return Math.random()<.1?m:(Math.random()<.5?'BERENSTAIN':'BERENSTEIN');});}());}
-
 
 
 // Default comment expansion options
@@ -717,6 +707,15 @@ function makeExpandOptions() {
 }
 
 
-if (localStorage.testExpand === 'true' && document.querySelector('#comments')) {
-  makeExpandOptions();
+
+// Run on pages with comments
+if (document.querySelector('#comments')) {
+  addUnloadListeners();
+  makeHighlight();
+  makeShowHideNewTextParentLinks();
+  makeMarkupLinks();
+
+  if (localStorage.testExpand === 'true') {
+    makeExpandOptions();
+  }
 }
