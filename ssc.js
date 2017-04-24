@@ -707,6 +707,20 @@ function makeExpandOptions() {
 }
 
 
+// Add a link to the page without comments
+function makeNoCommentsLink() {
+  var shareEnd = document.querySelector('.share-end');
+  if (shareEnd) {
+    var noCommentsLink = document.createElement('a');
+    noCommentsLink.innerHTML = 'Link without comments';
+    noCommentsLink.href = location.protocol + '//' + location.host + location.pathname + '?comments=false';
+    noCommentsLink.className = 'sd-button';
+    noCommentsLink.target = '_blank';
+    var noCommentsContainer = document.createElement('li');
+    noCommentsContainer.appendChild(noCommentsLink);
+    shareEnd.parentNode.insertBefore(noCommentsContainer, shareEnd);
+  }
+}
 
 // Run on pages with comments
 var cs = document.querySelector('#comments');
@@ -727,4 +741,6 @@ if (cs) {
       makeExpandOptions();
     }
   }
+
+  makeNoCommentsLink();
 }
