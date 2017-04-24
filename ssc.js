@@ -709,13 +709,22 @@ function makeExpandOptions() {
 
 
 // Run on pages with comments
-if (document.querySelector('#comments')) {
-  addUnloadListeners();
-  makeHighlight();
-  makeShowHideNewTextParentLinks();
-  makeMarkupLinks();
+var cs = document.querySelector('#comments');
+if (cs) {
+  if (location.search.match(/comments=false/)) {
+    cs.parentNode.removeChild(cs);
+    var responds = document.querySelectorAll('.comment-respond');
+    for (var i = 0; i < responds.length; ++i) {
+      responds[i].parentNode.removeChild(responds[i]);
+    }
+  } else {
+    addUnloadListeners();
+    makeHighlight();
+    makeShowHideNewTextParentLinks();
+    makeMarkupLinks();
 
-  if (localStorage.testExpand === 'true') {
-    makeExpandOptions();
+    if (localStorage.testExpand === 'true') {
+      makeExpandOptions();
+    }
   }
 }
