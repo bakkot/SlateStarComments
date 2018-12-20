@@ -709,16 +709,23 @@ function makeExpandOptions() {
 
 // Add a link to the page without comments
 function makeNoCommentsLink() {
-  var shareEnd = document.querySelector('.share-end');
-  if (shareEnd) {
-    var noCommentsLink = document.createElement('a');
-    noCommentsLink.innerHTML = 'Link without comments';
-    noCommentsLink.href = location.protocol + '//' + location.host + location.pathname + '?comments=false';
-    noCommentsLink.className = 'sd-button';
-    noCommentsLink.target = '_blank';
-    var noCommentsContainer = document.createElement('li');
-    noCommentsContainer.appendChild(noCommentsLink);
-    shareEnd.parentNode.insertBefore(noCommentsContainer, shareEnd);
+  var utils = document.querySelectorAll('.pjgm-postutility');
+
+  if (utils.length === 1) {
+    var utilLinks = utils[0].querySelectorAll('a');
+    var permalink = utilLinks[utilLinks.length - 1];
+    if (permalink && permalink.textContent === 'permalink') {
+        var noCommentsLink = document.createElement('a');
+        noCommentsLink.innerHTML = 'link without comments';
+        noCommentsLink.href = location.protocol + '//' + location.host + location.pathname + '?comments=false';
+        noCommentsLink.className = 'sd-button';
+        noCommentsLink.target = '_blank';
+
+        var or = document.createTextNode(' or ');
+
+        permalink.parentNode.insertBefore(noCommentsLink, permalink.nextSibling);
+        permalink.parentNode.insertBefore(or, noCommentsLink);
+    }
   }
 }
 
