@@ -323,9 +323,9 @@ function addUnloadListeners() {
     forms[i].addEventListener('submit', navListener);
   }
 
-  var loginLinks = document.querySelectorAll('.comment-reply-login,.must-log-in>a,.logged-in-as>a:nth-child(2)');
-  for (var i = 0; i < loginLinks.length; ++i) {
-    loginLinks[i].addEventListener('click', navListener);
+  var loginOrUpdateLinks = document.querySelectorAll('.comment-reply-login,.must-log-in>a,.logged-in-as>a:nth-child(2),#comment-order-reverse-button>a');
+  for (var i = 0; i < loginOrUpdateLinks.length; ++i) {
+    loginOrUpdateLinks[i].addEventListener('click', navListener);
   }
 
   addEventListener('unload', function(){
